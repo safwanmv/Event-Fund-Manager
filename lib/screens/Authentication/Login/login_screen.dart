@@ -1,11 +1,12 @@
-import 'package:expense_tracker/Custom%20Widgets/CTextFormField.dart';
-import 'package:expense_tracker/screens/Home/home_screen.dart';
+import 'package:expense_tracker/Custom%20Widgets/c_text_form_field.dart';
+// import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Authentication/SignUp/signup_screen.dart';
+import 'package:expense_tracker/screens/Main%20Screen/main_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -20,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final color=Theme.of(context).colorScheme;
+
     return SafeArea(
       child: Scaffold(
         body: Form(
@@ -33,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Enter your Email address",
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 15),
                 CTextFromField(
                   controller: _passwordController,
                   title: "Enter your Password",
@@ -54,45 +57,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.of(
                       context,
-                    ).push(MaterialPageRoute(builder: (ctx) => HomeScreen()));
+                    ).pushReplacement(MaterialPageRoute(builder: (ctx) => MainScreen()));
                   },
-                  child: Text("Login"),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).primaryColor,
+                      color.primary,
                     ),
                     foregroundColor: WidgetStatePropertyAll(Colors.black),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(5),
+                        borderRadius: BorderRadiusGeometry.circular(24),
                       ),
                     ),
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.symmetric(vertical: 16, horizontal: 54),
                     ),
                   ),
+                  child: Text("Login",style: TextStyle(color: color.surface),),
                 ),
-                SizedBox(height: 18,),
+                SizedBox(height: 18),
                 RichText(
                   text: TextSpan(
                     text: "Don't have an Account ?",
-                    style: TextStyle(
-                     fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16,color: color.onSurface),
                     children: [
                       TextSpan(
                         text: " SignUp",
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color:color.onSurface,
                           fontWeight: FontWeight.bold,
                         ),
                         recognizer: TapGestureRecognizer()
-                        ..onTap=(){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>SignupScreen()));
-                        }
-                      )
-                    ]
+                          ..onTap = () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (ctx) => SignupScreen(),
+                              ),
+                            );
+                          },
+                      ),
+                    ],
                   ),
                 ),
               ],

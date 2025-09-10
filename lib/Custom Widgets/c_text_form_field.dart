@@ -7,12 +7,13 @@ class CTextFromField extends StatefulWidget {
   final bool obscureText;
   final Widget? suffixIcon;
 
-  CTextFromField({
+  const CTextFromField({
     super.key,
     required this.controller,
     required this.title,
     this.keyboardType,
-    this.obscureText = false, this.suffixIcon,
+    this.obscureText = false,
+    this.suffixIcon,
   });
 
   @override
@@ -22,27 +23,32 @@ class CTextFromField extends StatefulWidget {
 class _CTextFromFieldState extends State<CTextFromField> {
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
     return TextFormField(
+      
       style: TextStyle(
-        color: Colors.white,
+        color: color.onSurface,
         fontSize: 23,
         fontWeight: FontWeight.w400,
       ),
       keyboardType: widget.keyboardType ?? TextInputType.text,
       obscureText: widget.obscureText,
       decoration: InputDecoration(
+        border: OutlineInputBorder(borderSide: BorderSide.none),
+        filled: true,
+        fillColor: color.onSurfaceVariant,
         suffixIcon: widget.suffixIcon,
-        labelText: widget.title,
-        labelStyle: const TextStyle(color: Colors.white, fontSize: 18),
+        hintText: widget.title,
+        hintStyle: TextStyle(color: color.onSurface, fontSize: 18),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
       ),
     );
   }

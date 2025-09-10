@@ -1,5 +1,5 @@
-import 'package:expense_tracker/screens/Authentication/Login/login_screen.dart';
-import 'package:expense_tracker/screens/Authentication/SignUp/signup_screen.dart';
+
+import 'package:expense_tracker/screens/Landing%20Screen/landing_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,8 +12,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
+    final color=Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:color.surface,
       body: Center(
         child: SafeArea(
           child: Text(
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
               fontSize: 40,
               fontWeight: FontWeight.bold,
               fontFamily: "Montserrat",
-              color: Theme.of(context).primaryColor,
+              color: color.primary
             ),
           ),
         ),
@@ -41,9 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> goToLogin() async {
-    await Future.delayed(Duration(seconds: 3));
-    Navigator.of(
+    final navigator =  Navigator.of(
       context,
-    ).pushReplacement(MaterialPageRoute(builder: (ctx) => SignupScreen()));
+    );
+    await Future.delayed(Duration(seconds: 3));
+   navigator.pushReplacement(MaterialPageRoute(builder: (ctx) => LandingScreen()));
   }
 }

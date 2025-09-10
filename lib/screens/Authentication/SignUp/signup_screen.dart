@@ -1,11 +1,11 @@
-import 'package:expense_tracker/Custom%20Widgets/CTextFormField.dart';
-import 'package:expense_tracker/screens/Home/home_screen.dart';
+import 'package:expense_tracker/Custom%20Widgets/c_text_form_field.dart';
+import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Authentication/Login/login_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+  const SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -24,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -84,10 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Theme.of(context).primaryColor,
-                      ),
-                      foregroundColor: WidgetStatePropertyAll(Colors.black),
+                      backgroundColor: WidgetStatePropertyAll(color.primary),
                       elevation: WidgetStatePropertyAll(3),
                       shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
@@ -103,7 +101,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         context,
                       ).push(MaterialPageRoute(builder: (ctx) => HomeScreen()));
                     },
-                    child: Text("SignUp"),
+                    child: Text(
+                      "SignUp",
+                      style: TextStyle(color: color.surface),
+                    ),
                   ),
                   SizedBox(height: 10),
                   RichText(
@@ -112,12 +113,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w300,
+                        color: color.onSurface,
                       ),
                       children: [
                         TextSpan(
                           text: " Login",
                           style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: color.primary,
                             fontWeight: FontWeight.bold,
                           ),
                           recognizer: TapGestureRecognizer()
