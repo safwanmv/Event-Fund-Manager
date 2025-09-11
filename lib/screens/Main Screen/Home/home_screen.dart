@@ -1,3 +1,4 @@
+import 'package:expense_tracker/chart/bar_chart_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
 import 'package:expense_tracker/widgets/homecreen_top_banner/homescreen_top_banner.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +18,33 @@ class _HomeScreenState extends State<HomeScreen> {
     final color = Theme.of(context).colorScheme;
     return SafeArea(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomescreenTopBanner(),
+          Padding(
+            padding: const EdgeInsets.only(left: 22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "User in The Last Week,",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "+2,1%",
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          BarChartScreen(),
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 22.0),
               child: Column(
                 children: [
-                  SizedBox(height: 210),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -74,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10),
                   Expanded(child: TransactionList()),
                 ],
               ),

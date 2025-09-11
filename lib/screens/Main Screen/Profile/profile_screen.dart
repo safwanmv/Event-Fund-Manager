@@ -8,16 +8,19 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: isDark,
-          builder: (context, value, child) {
-            return Switch(
-              value: isDark.value,
-              onChanged: (newvalue) {
-                isDark.value = newvalue;
+        child: Column(
+          children: [
+            ValueListenableBuilder(
+              valueListenable: isDark,
+              builder: (context, value, child) {
+                return IconButton.filledTonal(
+                  icon: Icon(isDark.value ? Icons.dark_mode : Icons.light_mode),
+                  onPressed: () => isDark.value = !isDark.value,
+                );
               },
-            );
-          },
+            ),
+
+          ],
         ),
       ),
     );

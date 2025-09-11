@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.light,
               surface: Colors.white,
               onSurface: Colors.black,
-              onSurfaceVariant:Color.fromARGB(255, 255, 249, 238),
+              onSurfaceVariant:Color.fromARGB(255, 253, 238, 211),
             ),
             textTheme: ThemeData.light().textTheme.apply(
               bodyColor: Colors.black,

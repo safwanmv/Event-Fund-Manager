@@ -7,12 +7,23 @@ class HomescreenTopBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double initialOffset=312*2;
+    final ScrollController scrollController=ScrollController(initialScrollOffset: initialOffset);
     return SizedBox(
-      height: 250,
-      child: PageView.builder(
+      height: 230,
+      child: GridView.builder(
+        controller: scrollController,
+        scrollDirection: Axis.horizontal,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          mainAxisExtent: 330,
+
+        ),
+
         itemBuilder: (context, index) {
+          
           return Container(
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: topBannerColors[index],
               borderRadius: BorderRadius.circular(35),
@@ -40,8 +51,8 @@ class HomescreenTopBanner extends StatelessWidget {
                             Text(
                               "₹45,000",
                               style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 38,
+                                fontWeight: FontWeight.w700,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -61,7 +72,10 @@ class HomescreenTopBanner extends StatelessWidget {
                             ),
                             Text(
                               '01-03-2025',
-                              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],

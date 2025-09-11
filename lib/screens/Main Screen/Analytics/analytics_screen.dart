@@ -14,7 +14,7 @@ class AnalyticsScreen extends StatelessWidget {
         children: [
           Text('Montly Expenses',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
           Text("Total Expense of this Month",style: TextStyle(color: color.primary),),
-          SizedBox(height: 430,),
+          SizedBox(height: 480,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -22,6 +22,7 @@ class AnalyticsScreen extends StatelessWidget {
               Text("See All")
             ],
           ),
+          SizedBox(height: 10,),
           Expanded(child: TransactionList())
         ],
       ),
