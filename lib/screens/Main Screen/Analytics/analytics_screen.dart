@@ -1,4 +1,3 @@
-import 'package:expense_tracker/chart/pie_chart_legend_screen.dart';
 import 'package:expense_tracker/chart/pie_chart_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ class AnalyticsScreen extends StatelessWidget {
             style: TextStyle(color: color.primary),
           ),
           PieChartScreen(),
-          // PieChartLegend(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
