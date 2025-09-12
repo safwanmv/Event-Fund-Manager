@@ -12,76 +12,25 @@ class BalanceScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // Row(
-            //   //card and add button
-            //   children: [
-            //     Column(
-            //       children: [
-            //         Container(
-            //           decoration: BoxDecoration(
-            //             color: const Color(0xFF89CFF0),
-
-            //             borderRadius: BorderRadius.circular(8),
-            //           ),
-
-            //           child: Padding(
-            //             padding: const EdgeInsets.all(8.0),
-            //             child: Column(
-            //               children: [
-            //                 Text(
-            //                   "MOhammed Safwan.MV",
-            //                   style: TextStyle(
-            //                     fontSize: 20,
-            //                     color: Colors.black,
-            //                   ),
-            //                 ),
-            //                 Row(
-            //                   spacing: 10,
-            //                   children: [
-            //                     Text(
-            //                       maskCardNumber("4653124"),
-            //                       style: TextStyle(
-            //                         fontSize: 18,
-            //                         letterSpacing: 2,
-            //                         color: Colors.black,
-            //                       ),
-            //                     ),
-            //                     Text(
-            //                       "09/08",
-            //                       style: TextStyle(color: Colors.black),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //         //
-            //         Container(
-            //           color: Colors.amber,
-            //           child: Column(
-            //             children: [Text("Balance"), Text("₹45,000")],
-            //           ),
-            //         ),
-
-            //       ],
-            //     ),
-            //     //add button icon
-            //   ],
-            // ),
             Row(
               spacing: 20,
               children: [
                 Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(29),
+                  ),
                   child: Column(
                     children: [
                       Container(
-                       constraints: const BoxConstraints(
-                        minHeight: 100
-                       ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF89CFF0),
+                          borderRadius: BorderRadiusGeometry.vertical(
+                            top: Radius.circular(29),
+                          ),
+                        ),
+                        constraints: const BoxConstraints(minHeight: 100),
                         padding: const EdgeInsets.all(16), // Add padding
-                                        
-                        color: const Color(0xFF89CFF0),
+                        // color:const Color(0xFF89CFF0),
                         width: 220,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +61,7 @@ class BalanceScreen extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.all(16), // Add padding
-                  
+
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -153,10 +102,13 @@ class BalanceScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text("Transactions",style: TextStyle(fontSize: 16),), Text("Analytics",style: TextStyle(color: color.primary),)],
+              children: [
+                Text("Transactions", style: TextStyle(fontSize: 16)),
+                Text("Analytics", style: TextStyle(color: color.primary)),
+              ],
             ),
             SizedBox(height: 10),
             Expanded(child: TransactionList()),
