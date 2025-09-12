@@ -1,7 +1,16 @@
+import 'package:expense_tracker/models/categroy/category_model.dart';
+import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Splash%20Screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized;
+  await Hive.initFlutter();
+  Hive.registerAdapter(CategoryTypeAdapter());
+  Hive.registerAdapter(CategoryModelAdapter());
+  Hive.registerAdapter(TransactionModelAdapter());
+
   runApp(MyApp());
 }
 
@@ -34,7 +43,7 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.light,
               surface: Colors.white,
               onSurface: Colors.black,
-              onSurfaceVariant:Color.fromARGB(255, 253, 238, 211),
+              onSurfaceVariant: Color.fromARGB(255, 253, 238, 211),
             ),
             textTheme: ThemeData.light().textTheme.apply(
               bodyColor: Colors.black,
