@@ -1,4 +1,4 @@
-import 'package:expense_tracker/Custom%20Widgets/c_text_form_field.dart';
+import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 // import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Authentication/SignUp/signup_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/main_screen.dart';
@@ -35,6 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _emailController,
                   title: "Enter your Email address",
                   keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if(value==null || value.isEmpty){
+                      return "Enter your Email Address";
+                    }
+                    return null;
+                  } ,
                 ),
                 SizedBox(height: 15),
                 CTextFromField(
@@ -51,6 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       _isVisible ? Icons.visibility_off : Icons.visibility,
                     ),
                   ),
+                  validator: (value) {
+                    if(value==null || value.isEmpty){
+                      return "Enter your Password";
+                    }
+                    return null;
+                  } ,
                 ),
                 SizedBox(height: 15),
                 ElevatedButton(

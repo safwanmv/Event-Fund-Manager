@@ -1,4 +1,4 @@
-import 'package:expense_tracker/Custom%20Widgets/c_text_form_field.dart';
+import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Authentication/Login/login_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -39,12 +39,24 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _nameController,
                     title: "Name",
                     keyboardType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Enter your name";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 10),
                   CTextFromField(
                     controller: _emailController,
                     title: "email",
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Enter your Email";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 10),
                   CTextFromField(
@@ -62,6 +74,12 @@ class _SignupScreenState extends State<SignupScreen> {
                         _isVisible ? Icons.visibility_off : Icons.visibility,
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Enter your Password";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 10),
                   CTextFromField(
@@ -81,6 +99,12 @@ class _SignupScreenState extends State<SignupScreen> {
                             : Icons.visibility,
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Enter your confirm Password";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
