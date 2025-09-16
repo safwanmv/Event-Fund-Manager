@@ -1,3 +1,5 @@
+import 'package:expense_tracker/db/Category_db/category_db.dart';
+import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Splash%20Screen/splash_screen.dart';
@@ -9,8 +11,9 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CategoryTypeAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
-  Hive.registerAdapter(TransactionModelAdapter());
-
+  Hive.registerAdapter(TransactionsModelAdapter());
+  await TransactionDb.instance.initTransactionBox();
+  await CategoryDB.instance.initCategoryBox();
   runApp(MyApp());
 }
 
@@ -45,6 +48,11 @@ class MyApp extends StatelessWidget {
               onSurface: Colors.black,
               onSurfaceVariant: Color.fromARGB(255, 253, 238, 211),
             ),
+            datePickerTheme: const DatePickerThemeData(
+              backgroundColor: Colors.white, // Date picker only
+              dayForegroundColor: WidgetStatePropertyAll(Colors.black),
+              yearForegroundColor: WidgetStatePropertyAll(Colors.black),
+            ),
             textTheme: ThemeData.light().textTheme.apply(
               bodyColor: Colors.black,
             ),
@@ -59,6 +67,13 @@ class MyApp extends StatelessWidget {
               onSurfaceVariant: Colors.grey[900],
 
               brightness: Brightness.dark,
+            ),
+
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Color(0xFF63B89B),
+              yearOverlayColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
+              dayForegroundColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
+              yearForegroundColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
             ),
             textTheme: ThemeData.dark().textTheme.apply(
               bodyColor: Colors.white,
