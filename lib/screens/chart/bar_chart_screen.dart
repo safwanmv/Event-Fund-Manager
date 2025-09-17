@@ -4,6 +4,7 @@ import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BarChartScreen extends StatelessWidget {
   const BarChartScreen({super.key});
@@ -13,7 +14,7 @@ class BarChartScreen extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
 
     return SizedBox(
-      height: 200,
+      height: 200.h,
       child: ValueListenableBuilder(
         valueListenable: TransactionDb.instance.transactionListNotifer,
         builder: (context, newList, child) {
@@ -21,17 +22,17 @@ class BarChartScreen extends StatelessWidget {
               .where((i) => i.type == CategoryType.income)
               .toList();
           if (incomes.isEmpty) {
-            return const Center(child: Text("No income data"));
+            return  Center(child: Text("No income data",style: TextStyle(fontSize: 16.sp),));
           }
           incomes.sort((a, b) => b.amount.compareTo(a.amount));
           final topIncomes = incomes.take(4).toList();
 
           //set maxY
-  
+
           final double highest = topIncomes
               .map((i) => i.amount)
               .fold(0.0, (p, e) => math.max(p, e));
-          final double maxY = highest == 0 ? 10 : (highest * 1.3);
+          final double maxY = highest == 0.h ? 10.h : (highest * 1.3.h);
           return BarChart(
             BarChartData(
               //here we can set the limit
@@ -50,13 +51,14 @@ class BarChartScreen extends StatelessWidget {
                       TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
                       ),
                     );
                   },
 
                   tooltipBorder: BorderSide(color: Colors.white),
-                  tooltipPadding: EdgeInsets.all(8),
-                  tooltipRoundedRadius: 10,
+                  tooltipPadding: EdgeInsets.all(8.r),
+                  tooltipRoundedRadius: 10.r,
                   tooltipHorizontalAlignment: FLHorizontalAlignment.left,
                 ),
               ),
@@ -67,17 +69,16 @@ class BarChartScreen extends StatelessWidget {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 30,
+                    reservedSize: 30.w,
                     getTitlesWidget: (value, meta) {
                       final i = value.toInt();
                       if (i < 0 || i >= topIncomes.length)
                         return const SizedBox();
-
                       return Text(
                         topIncomes[i].name,
                         style: TextStyle(
                           color: color.primary,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       );
@@ -86,15 +87,15 @@ class BarChartScreen extends StatelessWidget {
                 ),
               ),
               barGroups: List.generate(topIncomes.length, (index) {
-                final amt=topIncomes[index].amount;
+                final amt = topIncomes[index].amount;
                 return BarChartGroupData(
                   x: index,
 
                   barRods: [
                     BarChartRodData(
                       toY: amt,
-                      width: 22,
-                      borderRadius: BorderRadius.circular(8),
+                      width: 22.w,
+                      borderRadius: BorderRadius.circular(8.r),
                       color: color.primary,
                       backDrawRodData: BackgroundBarChartRodData(
                         color: color.onSurfaceVariant,
@@ -110,6 +111,5 @@ class BarChartScreen extends StatelessWidget {
         },
       ),
     );
-    // return Text("data");
   }
 }

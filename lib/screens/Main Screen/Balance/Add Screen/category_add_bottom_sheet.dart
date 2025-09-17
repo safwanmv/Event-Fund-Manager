@@ -2,35 +2,41 @@ import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Category_db/category_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void showAddCategoryBottomSheet(BuildContext context) {
   CategoryDB.instance.refreshUI();
   final color = Theme.of(context).colorScheme;
   final categoryNameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  CategoryType? selectedCategory;
+  final formKey = GlobalKey<FormState>();
+  CategoryType? selectedCategory=CategoryType.expense;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return Padding(
             padding: EdgeInsets.only(
-              right: 16,
-              left: 16,
-              top: 16,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+              right: 26.w,
+              left: 26.w,
+              top: 16.h,
+              bottom:
+                  MediaQuery.of(context).viewInsets.bottom +
+                  56.h, 
             ),
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "Add Category",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
                   Row(
@@ -47,7 +53,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                               });
                             },
                           ),
-                          Text("Expense"),
+                          Text("Expense", style: TextStyle(fontSize: 16.sp)),
                         ],
                       ),
                       Row(
@@ -61,7 +67,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                               });
                             },
                           ),
-                          Text("Income"),
+                          Text("Income", style: TextStyle(fontSize: 16.sp)),
                         ],
                       ),
                     ],
@@ -70,6 +76,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                   CTextFromField(
                     controller: categoryNameController,
                     title: "Category name",
+
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please Enter Catergory";
@@ -77,22 +84,22 @@ void showAddCategoryBottomSheet(BuildContext context) {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 26.h),
 
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 26,
-                        vertical: 6,
+                        horizontal: 36.w,
+                        vertical: 6.h,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       backgroundColor: color.primary,
                       foregroundColor: color.onSurface,
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
+                      if (formKey.currentState!.validate()) {
                         final name = categoryNameController.text.trim();
                         final selectedType = selectedCategory;
                         CategoryDB.instance.addCategoryToDB(
@@ -101,11 +108,11 @@ void showAddCategoryBottomSheet(BuildContext context) {
                         );
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Successfully Added")),
+                           SnackBar(content: Text("Successfully Added",style: TextStyle(fontSize: 16.sp),)),
                         );
                       }
                     },
-                    child: Text("Add"),
+                    child: Text("Add",style: TextStyle(fontSize: 16.sp),),
                   ),
                 ],
               ),

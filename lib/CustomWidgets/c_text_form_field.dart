@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CTextFromField extends StatefulWidget {
   final TextEditingController controller;
   final String? title;
@@ -30,7 +30,7 @@ class _CTextFromFieldState extends State<CTextFromField> {
      controller:widget.controller,
       style: TextStyle(
         color: color.onSurface,
-        fontSize: 23,
+        fontSize: 23.sp,
         fontWeight: FontWeight.w400,
       ),
       keyboardType: widget.keyboardType ?? TextInputType.text,
@@ -41,16 +41,16 @@ class _CTextFromFieldState extends State<CTextFromField> {
         fillColor: color.onSurfaceVariant,
         suffixIcon: widget.suffixIcon,
         hintText: widget.title,
-        hintStyle: TextStyle(color: color.onSurface, fontSize: 18),
+        hintStyle: TextStyle(color: color.onSurface, fontSize: 18.sp),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(18.r),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       ),
       validator:widget.validator,
     );

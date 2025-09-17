@@ -3,6 +3,7 @@ import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Category_db/category_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class TransactionAddBottomSheet extends StatefulWidget {
@@ -30,7 +31,6 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
 
   @override
   void initState() {
-    // TODO: implement initState
     CategoryDB.instance.refreshUI();
     selectedCategory = CategoryType.expense;
     super.initState();
@@ -42,10 +42,10 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
     final color = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.only(
-        right: 16,
-        left: 16,
-        top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        right: 26.w,
+        left: 26.w,
+        top: 16.h,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 46.h,
       ),
       child: Form(
         key: formKey,
@@ -55,7 +55,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
           children: [
             Text(
               "Add Category",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
 
             Row(
@@ -73,7 +73,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                         });
                       },
                     ),
-                    Text("Expense"),
+                    Text("Expense",style: TextStyle(fontSize: 16.sp),),
                   ],
                 ),
                 Row(
@@ -90,12 +90,16 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                     ),
                   ],
                 ),
-                Text("income"),
+                Text("income",style: TextStyle(fontSize: 16.sp),),
               ],
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 12.h),
             DropdownButtonFormField(
-              hint: Text("Select Category"),
+              decoration: InputDecoration(
+               border: InputBorder.none,
+               
+              ),
+              hint: Text("Select Category",style: TextStyle(fontSize: 16.sp),),
               value: categoryId,
               items:
                   (selectedCategory == CategoryType.expense
@@ -122,7 +126,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                 return null;
               },
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 12.h),
             CTextFromField(
               controller: nameController,
               title: "Name ",
@@ -133,7 +137,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                 return null;
               },
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
             CTextFromField(
               controller: amountController,
               title: "Amount",
@@ -150,7 +154,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                 return null;
               },
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
             TextButton.icon(
               onPressed: () async {
                 final selectDateTimeTemp = await showDatePicker(
@@ -173,18 +177,18 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                     ? "Select Date"
                     : formattedDate(selectDateTime!),
                     
-              ),
+              style: TextStyle(fontSize: 16.sp),),
               icon: Icon(Icons.calendar_month),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 13.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 26, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 6.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(12),
+                  borderRadius: BorderRadiusGeometry.circular(12.r),
                 ),
                 backgroundColor: color.primary,
-                foregroundColor: color.onSurface,
+                foregroundColor: color.surface,
               ),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
@@ -199,11 +203,12 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                   );
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Successfully Added")),
+                     SnackBar(content: Text("Successfully Added",style: TextStyle(fontSize: 16.sp),)),
                   );
                 }
               },
-              child: Text("Submit"),
+              child: Text("Submit",style: TextStyle(fontSize: 16.sp),),
+            
             ),
           ],
         ),

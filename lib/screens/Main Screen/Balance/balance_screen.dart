@@ -5,7 +5,7 @@ import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/categ
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/transaction_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -17,13 +17,86 @@ class BalanceScreen extends StatefulWidget {
 class _BalanceScreenState extends State<BalanceScreen> {
   @override
   void initState() {
-    TransactionDb.instance.refreshUI();
     super.initState();
+    TransactionDb.instance.refreshUI();
   }
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w, top: 10.h),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: BalanceCard()),
+                SizedBox(width: 20.w),
+                Column(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => TransactionAddBottomSheet(),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        padding: EdgeInsets.all(25.r),
+                      ),
+                      child: Icon(Icons.add, size: 24.r),
+                    ),
+                    SizedBox(height: 20.h),
+                    OutlinedButton(
+                      onPressed: () {
+                        showAddCategoryBottomSheet(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        padding: EdgeInsets.all(25.r),
+                      ),
+                      child: Icon(Icons.category, size: 24.r),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Transactions", style: TextStyle(fontSize: 16.sp)),
+                Text(
+                  "Amount",
+                  style: TextStyle(color: color.primary, fontSize: 14.sp),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.h),
+            Expanded(child: TransactionList()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BalanceCard extends StatelessWidget {
+  const BalanceCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
+
     return ValueListenableBuilder(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (BuildContext ctx, List<TransactionsModel> newList, Widget? _) {
@@ -42,134 +115,104 @@ class _BalanceScreenState extends State<BalanceScreen> {
             );
         double balance = totalIncome - totalExpense;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0.w),
           child: SafeArea(
             child: Column(
               children: [
                 Row(
-                  spacing: 20,
                   children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(29),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF89CFF0),
-                              borderRadius: BorderRadiusGeometry.vertical(
-                                top: Radius.circular(29),
+                    Expanded(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(29.r),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width:
+                                  double.infinity, // Fills the Card horizontally
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF89CFF0),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(29.r),
+                                ),
+                              ),
+                              constraints: BoxConstraints(minHeight: 100.h),
+                              padding: EdgeInsets.all(16.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Mohammed Safwan.MV",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        maskCardNumber("102034324"),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        "11/25",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            constraints: const BoxConstraints(minHeight: 100),
-                            padding: const EdgeInsets.all(16), // Add padding
-                            // color:const Color(0xFF89CFF0),
-                            width: 220,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Mohammed Safwan.MV",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
+                            Container(
+                              padding: EdgeInsets.all(16.r), // Add padding
+                      
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Balance",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  spacing: 50,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      maskCardNumber("102034324"),
-                                      style: TextStyle(color: Colors.black),
+                                  Text(
+                                    "₹$balance",
+                                    style: TextStyle(
+                                      fontSize: 40.sp,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    Text(
-                                      "11/25",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(16), // Add padding
-
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Balance",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  "₹$balance",
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Total week Expense      23.3%",
-                                      style: TextStyle(color: color.primary),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Total week Expense      23.3%",
+                                        style: TextStyle(
+                                          color: color.primary,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    Column(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => TransactionAddBottomSheet()
-                            );
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: EdgeInsets.all(25),
-                          ),
-                          child: Icon(Icons.add),
-                        ),
-                        SizedBox(height: 20),
-                        OutlinedButton(
-                          onPressed: () {
-                            showAddCategoryBottomSheet(context);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: EdgeInsets.all(25),
-                          ),
-                          child: Icon(Icons.category),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Transactions", style: TextStyle(fontSize: 16)),
-                    Text("Amount", style: TextStyle(color: color.primary)),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Expanded(child: TransactionList()),
               ],
             ),
           ),
@@ -177,9 +220,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
       },
     );
   }
+}
 
-  String maskCardNumber(String number) {
-    String lastFour = number.substring(number.length - 4);
-    return "**** $lastFour";
-  }
+String maskCardNumber(String number) {
+  String lastFour = number.substring(number.length - 4);
+  return "**** $lastFour";
 }

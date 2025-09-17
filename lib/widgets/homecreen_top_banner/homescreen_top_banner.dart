@@ -1,9 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/theme/colors/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:intl/intl.dart';
 
 class HomescreenTopBanner extends StatelessWidget {
@@ -12,7 +12,7 @@ class HomescreenTopBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double initialOffset = 312 * 2;
+    final double initialOffset = 312.w * 2;
     final ScrollController scrollController = ScrollController(
       initialScrollOffset: initialOffset,
     );
@@ -23,34 +23,35 @@ class HomescreenTopBanner extends StatelessWidget {
             .where((i) => i.type == CategoryType.income)
             .toList();
         if (incomes.isEmpty) {
-          return const Center(child: Text("data"));
+          return Center(
+            child: Text("No Data", style: TextStyle(fontSize: 16.sp)),
+          );
         }
         incomes.sort((a, b) => b.amount.compareTo(a.amount));
-        final topIncomes=incomes.take(4).toList();
+        final topIncomes = incomes.take(4).toList();
 
-        // final double highest=topIncomes.map((i)=>i.amount).fold(0.0, (p,e)=>math.max(p,e));
         return SizedBox(
-          height: 230,
+          height: 230.h,
           child: GridView.builder(
             controller: scrollController,
             scrollDirection: Axis.horizontal,
 
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
-              mainAxisExtent: 330,
+              mainAxisExtent: 330.w,
             ),
             itemBuilder: (context, index) {
               final value = topIncomes[index];
               final formattedDate = DateFormat('dd-MM-yyyy').format(value.date);
               return Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(10.r),
                 decoration: BoxDecoration(
                   color: topBannerColors[index % topBannerColors.length],
-                  borderRadius: BorderRadius.circular(35),
+                  borderRadius: BorderRadius.circular(35.r),
                 ),
-                height: 80,
+                height: 80.h,
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(10.0.r),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -64,17 +65,17 @@ class HomescreenTopBanner extends StatelessWidget {
                                 Text(
                                   value.name,
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 Text(
                                   "₹${value.amount}",
                                   style: TextStyle(
-                                    fontSize: 28,
+                                    fontSize: 28.sp,
                                     fontWeight: FontWeight.w700,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -86,7 +87,7 @@ class HomescreenTopBanner extends StatelessWidget {
                                 Text(
                                   value.type.toString(),
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -94,7 +95,7 @@ class HomescreenTopBanner extends StatelessWidget {
                                   formattedDate,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 20.sp,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -109,7 +110,6 @@ class HomescreenTopBanner extends StatelessWidget {
               );
             },
             itemCount: topIncomes.length,
-
           ),
         );
       },

@@ -4,6 +4,7 @@ import 'package:expense_tracker/screens/Authentication/SignUp/signup_screen.dart
 import 'package:expense_tracker/screens/Main%20Screen/main_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         body: Form(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.all(8.r),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   } ,
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 CTextFromField(
                   controller: _passwordController,
                   title: "Enter your Password",
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                     icon: Icon(
-                      _isVisible ? Icons.visibility_off : Icons.visibility,
+                      _isVisible ? Icons.visibility_off : Icons.visibility,size: 20.r,
                     ),
                   ),
                   validator: (value) {
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   } ,
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(
@@ -78,26 +79,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     foregroundColor: WidgetStatePropertyAll(Colors.black),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(24),
+                        borderRadius: BorderRadiusGeometry.circular(24.r),
                       ),
                     ),
                     padding: WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(vertical: 16, horizontal: 54),
+                      EdgeInsets.symmetric(vertical: 16.h, horizontal: 54.w),
                     ),
                   ),
-                  child: Text("Login",style: TextStyle(color: color.surface),),
+                  child: Text("Login",style: TextStyle(color: color.surface,fontSize:16.sp ),),
                 ),
-                SizedBox(height: 18),
+                SizedBox(height: 18.h),
                 RichText(
                   text: TextSpan(
                     text: "Don't have an Account ?",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16,color: color.onSurface),
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp,color: color.onSurface),
                     children: [
                       TextSpan(
                         text: " SignUp",
                         style: TextStyle(
                           color:color.onSurface,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16.sp,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
