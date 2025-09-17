@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:uuid/uuid.dart';
 part 'category_model.g.dart';
 
 @HiveType(typeId: 1)
@@ -21,9 +22,9 @@ class CategoryModel {
   final CategoryType type;
 
   CategoryModel({
-    required this.id,
+    String? id,
     required this.name,
     required this.type,
     this.isDeleted = false,
-  });
+  }) : id = id ?? const Uuid().v4();
 }
