@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    // final color = Theme.of(context).colorScheme;
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
