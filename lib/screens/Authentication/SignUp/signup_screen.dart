@@ -1,5 +1,5 @@
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
-// import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
+import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/screens/Authentication/Login/login_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/main_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -23,6 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _isVisible = true;
   bool _isVisibleConfirm = true;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,11 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Padding(
             padding: EdgeInsets.all(8.0.r),
             child: Form(
+              key: formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                
+
                   children: [
                     CTextFromField(
                       controller: _nameController,
@@ -58,6 +60,20 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return "Enter your Email";
                         }
+
+                        final emailRegex = RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        );
+                        if (!emailRegex.hasMatch(value)) {
+                          return "Enter a valid email";
+                        }
+
+                        final existingUser = UserDb.instance.getUserByEmail(
+                          value.trim(),
+                        );
+                        if (existingUser != null) {
+                          return "Email is already taken";
+                        }
                         return null;
                       },
                     ),
@@ -73,13 +89,17 @@ class _SignupScreenState extends State<SignupScreen> {
                           });
                         },
                         icon: Icon(
-                          color: Colors.white, size: 20.r,
+                          color: Colors.white,
+                          size: 20.r,
                           _isVisible ? Icons.visibility_off : Icons.visibility,
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return "Enter your Password";
+                        }
+                        if (value.trim().length < 8) {
+                          return "Password must be at least 8 characters long";
                         }
                         return null;
                       },
@@ -96,7 +116,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           });
                         },
                         icon: Icon(
-                          color: Colors.white,size: 20.r,
+                          color: Colors.white,
+                          size: 20.r,
                           _isVisibleConfirm
                               ? Icons.visibility_off
                               : Icons.visibility,
@@ -105,6 +126,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return "Enter your confirm Password";
+                        }
+                        if (value.trim().length < 8) {
+                          return "Password must be at least 8 characters long";
+                        }
+                        if (value.trim() !=
+                            _confirmPasswordController.text.trim()) {
+                          return "Password and Confirm Password do not match";
                         }
                         return null;
                       },
@@ -127,9 +155,20 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).push(MaterialPageRoute(builder: (ctx) => MainScreen()));
+                        if (formKey.currentState!.validate()) {
+                          String name = _nameController.text.trim();
+                          String email = _emailController.text.trim();
+                          String password = _passwordController.text.trim();
+
+                          UserDb.instance.addDataToDB(
+                            name: name,
+                            email: email,
+                            password: password,
+                          );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) => MainScreen()),
+                          );
+                        }
                       },
                       child: Text(
                         "SignUp",
@@ -151,7 +190,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             style: TextStyle(
                               color: color.primary,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16.sp
+                              fontSize: 16.sp,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

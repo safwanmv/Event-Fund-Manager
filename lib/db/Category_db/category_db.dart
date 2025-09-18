@@ -2,6 +2,7 @@ import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 
+// ignore: constant_identifier_names
 const CATEGORY_DB_NAME = 'category_db';
 
 abstract class CategoryDbFunctions {
@@ -61,6 +62,7 @@ class CategoryDB implements CategoryDbFunctions {
     await _categoryBox.put(obj.id, obj);
     await refreshUI();
   }
+  
 
   @override
   Future<void> deleteCategory(String id) async {
