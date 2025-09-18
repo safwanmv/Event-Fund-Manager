@@ -22,20 +22,28 @@ class BarChartScreen extends StatelessWidget {
               .where((i) => i.type == CategoryType.income)
               .toList();
           if (incomes.isEmpty) {
-            return  Center(child: Text("No income data",style: TextStyle(fontSize: 16.sp),));
+            return Center(
+              child: Text("No income data", style: TextStyle(fontSize: 16.sp)),
+            );
           }
           incomes.sort((a, b) => b.amount.compareTo(a.amount));
           final topIncomes = incomes.take(4).toList();
 
-          //set maxY
 
           final double highest = topIncomes
               .map((i) => i.amount)
               .fold(0.0, (p, e) => math.max(p, e));
-          final double maxY = highest == 0.h ? 10.h : (highest * 1.3.h);
+
+          const double step = 5000; //we can set limit by the admin
+
+          final double rawMaxY = highest * 1.2;
+
+          final double maxY = ((rawMaxY / step).ceil()) * step;
+
+          final double interval = step;
+
           return BarChart(
             BarChartData(
-              //here we can set the limit
               maxY: maxY,
               gridData: FlGridData(show: false),
               barTouchData: BarTouchData(
@@ -66,14 +74,33 @@ class BarChartScreen extends StatelessWidget {
               titlesData: FlTitlesData(
                 rightTitles: AxisTitles(),
                 topTitles: AxisTitles(),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: interval,
+                    reservedSize: 40.w,
+                    getTitlesWidget: (value, meta) {
+                      if (value > maxY)
+                        return const SizedBox(); // hide anything above maxY
+                      return Text(
+                        (value>=1000)? "${(value / 1000).toInt()}k":value.toString(),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey[700],
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 30.w,
                     getTitlesWidget: (value, meta) {
                       final i = value.toInt();
-                      if (i < 0 || i >= topIncomes.length)
+                      if (i < 0 || i >= topIncomes.length) {
                         return const SizedBox();
+                      }
                       return Text(
                         topIncomes[i].name,
                         style: TextStyle(
