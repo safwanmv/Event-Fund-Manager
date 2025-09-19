@@ -167,6 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           );
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (ctx) => MainScreen()),
+
                           );
                         }
                       },

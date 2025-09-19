@@ -1,6 +1,5 @@
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Users_db/users_db.dart';
-// import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Authentication/SignUp/signup_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/main_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -23,12 +22,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    UserDb.instance.userListNotifier;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
 
     return SafeArea(
       child: Scaffold(
         body: Form(
+          key: formKey,
           child: Padding(
             padding: EdgeInsets.all(8.r),
             child: Column(
@@ -72,27 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 15.h),
                 ElevatedButton(
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      String email = _emailController.text.trim();
-                      String password = _passwordController.text.trim();
-                      final user = UserDb.instance.getUserByEmail(email);
-                      if (user == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("No account found with this Email"),
-                          ),
-                        );
-                        return;
-                      }
-                      if (user.password != password) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Incorrect Password")),
-                        );
-                      }
-                    }
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (ctx) => MainScreen()),
-                    );
+                    login();
                   },
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(color.primary),
@@ -146,5 +132,32 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> login() async {
+    if (formKey.currentState!.validate()) {
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+      final user = UserDb.instance.getUserByEmail(email);
+      if (!mounted) return;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No account found with this Email")),
+        );
+        return;
+      }
+      if (user.password != password) {
+        await UserDb.instance.refreshUI();
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Incorrect Password")));
+        return;
+      }
+
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (ctx) => MainScreen()));
+    }
   }
 }

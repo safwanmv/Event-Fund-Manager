@@ -1,5 +1,7 @@
 import 'package:expense_tracker/db/Category_db/category_db.dart';
+import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Users/user_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Splash%20Screen/splash_screen.dart';
@@ -13,8 +15,12 @@ void main() async {
   Hive.registerAdapter(CategoryTypeAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
   Hive.registerAdapter(TransactionsModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
+
   await TransactionDb.instance.initTransactionBox();
   await CategoryDB.instance.initCategoryBox();
+  await UserDb.instance.initUserBox();
+
   runApp(MyApp());
 }
 
@@ -34,16 +40,8 @@ class MyApp extends StatelessWidget {
         builder: (context, isDarkMode, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-      
+
             theme: ThemeData(
-              // scaffoldBackgroundColor: Colors.white,
-              // primaryColor: const Color(0xFF63B89B),
-              // highlightColor: const Color(0xFFFFD78E),
-      
-              // textTheme: ThemeData.light().textTheme.apply(
-              //   bodyColor: Colors.black,
-              //   displayColor: Colors.black,
-              // )
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(
                 seedColor: Color(0xFF63B89B),
@@ -70,15 +68,21 @@ class MyApp extends StatelessWidget {
                 surface: Colors.black,
                 onSurface: Colors.white,
                 onSurfaceVariant: Colors.grey[900],
-      
+
                 brightness: Brightness.dark,
               ),
-      
+
               datePickerTheme: DatePickerThemeData(
                 backgroundColor: Color(0xFF63B89B),
-                yearOverlayColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
-                dayForegroundColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
-                yearForegroundColor: const WidgetStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),
+                yearOverlayColor: const WidgetStatePropertyAll(
+                  Color.fromARGB(255, 0, 0, 0),
+                ),
+                dayForegroundColor: const WidgetStatePropertyAll(
+                  Color.fromARGB(255, 0, 0, 0),
+                ),
+                yearForegroundColor: const WidgetStatePropertyAll(
+                  Color.fromARGB(255, 0, 0, 0),
+                ),
               ),
               textTheme: ThemeData.dark().textTheme.apply(
                 bodyColor: Colors.white,

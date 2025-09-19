@@ -76,4 +76,6 @@ class UserDb implements UserDbFunctions {
     final dataToDB = UserModel(name: name, email: email, password: password);
     await UserDb.instance.insertUser(dataToDB);
   }
+
+  
 }

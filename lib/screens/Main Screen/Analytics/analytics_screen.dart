@@ -39,7 +39,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             pinned: true,
             delegate: _AnalyticsHeaderDelegate(
               minExtent: screenHeight * 0.5.h, // stays until half screen
-              maxExtent: screenHeight * 0.8.h, // fully expanded
+              maxExtent: screenHeight * 0.6.h, // fully expanded
               selectedType: selectedType,
               onTypeChanged: (type) {
                 setState(() => selectedType = type);
