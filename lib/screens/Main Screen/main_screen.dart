@@ -2,7 +2,7 @@ import 'package:expense_tracker/screens/Main%20Screen/Analytics/analytics_screen
 import 'package:expense_tracker/screens/Main%20Screen/Balance/balance_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Profile/profile_screen.dart';
-import 'package:expense_tracker/widgets/homecreen_top_banner/bottom_naviagtion.dart';
+import 'package:expense_tracker/widgets/bottom_navigation/bottom_naviagtion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
