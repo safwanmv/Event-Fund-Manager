@@ -7,6 +7,7 @@ import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+// ignore: constant_identifier_names
 const TRANSACTION_DB_NAME = 'transaction-db';
 
 abstract class TransactionDbFunctions {

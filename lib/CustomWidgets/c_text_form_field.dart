@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class CTextFromField extends StatefulWidget {
   final TextEditingController controller;
   final String? title;
@@ -7,15 +8,26 @@ class CTextFromField extends StatefulWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
-
+  final TextInputAction? textInputAction;
+  final Function(String)? onFieldSubmitted;
+  final void Function()? onTap;
+  final Widget? prefixIcon;
+  final int? maxLength;
+  final int? minLines;
   const CTextFromField({
     super.key,
     required this.controller,
     required this.title,
     this.keyboardType,
+    this.maxLength,
+    this.minLines,
     this.obscureText = false,
+    this.prefixIcon,
     this.suffixIcon,
     required this.validator,
+    this.textInputAction = TextInputAction.none,
+    this.onFieldSubmitted,
+    this.onTap,
   });
 
   @override
@@ -27,19 +39,26 @@ class _CTextFromFieldState extends State<CTextFromField> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     return TextFormField(
-     controller:widget.controller,
+      controller: widget.controller,
       style: TextStyle(
         color: color.onSurface,
-        fontSize: 23.sp,
+        fontSize: 13.sp,
         fontWeight: FontWeight.w400,
       ),
       keyboardType: widget.keyboardType ?? TextInputType.text,
+      maxLength: widget.maxLength,
+      minLines: widget.minLines,
       obscureText: widget.obscureText,
       decoration: InputDecoration(
         border: OutlineInputBorder(borderSide: BorderSide.none),
         filled: true,
         fillColor: color.onSurfaceVariant,
+        prefixIcon: widget.prefixIcon,
+        prefixIconColor: color.onSurface,
+        prefixStyle: TextStyle(fontSize: 16.sp),
         suffixIcon: widget.suffixIcon,
+        suffixIconColor: color.onSurface,
+        suffixStyle: TextStyle(fontSize: 16.sp),
         hintText: widget.title,
         hintStyle: TextStyle(color: color.onSurface, fontSize: 18.sp),
         enabledBorder: OutlineInputBorder(
@@ -50,9 +69,12 @@ class _CTextFromFieldState extends State<CTextFromField> {
           borderRadius: BorderRadius.circular(18.r),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       ),
-      validator:widget.validator,
+      validator: widget.validator,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      onTap: widget.onTap,
     );
   }
 }
