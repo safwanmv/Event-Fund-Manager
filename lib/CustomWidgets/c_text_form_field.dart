@@ -12,14 +12,14 @@ class CTextFromField extends StatefulWidget {
   final Function(String)? onFieldSubmitted;
   final void Function()? onTap;
   final Widget? prefixIcon;
-  final int? maxLength;
+  final int? maxLines;
   final int? minLines;
   const CTextFromField({
     super.key,
     required this.controller,
     required this.title,
     this.keyboardType,
-    this.maxLength,
+    this.maxLines,
     this.minLines,
     this.obscureText = false,
     this.prefixIcon,
@@ -46,7 +46,7 @@ class _CTextFromFieldState extends State<CTextFromField> {
         fontWeight: FontWeight.w400,
       ),
       keyboardType: widget.keyboardType ?? TextInputType.text,
-      maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
       minLines: widget.minLines,
       obscureText: widget.obscureText,
       decoration: InputDecoration(
