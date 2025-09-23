@@ -25,6 +25,11 @@ class BottomNaviagtion extends StatelessWidget {
                 icon: Icon(Icons.pie_chart, color: color.primary, size: 24.r),
                 label: "",
               ),
+
+              NavigationDestination(
+                icon: Icon(Icons.credit_card, color: color.primary, size: 24.r),
+                label: "",
+              ),
               NavigationDestination(
                 icon: Icon(
                   Icons.desktop_windows,
@@ -33,10 +38,7 @@ class BottomNaviagtion extends StatelessWidget {
                 ),
                 label: "",
               ),
-              NavigationDestination(
-                icon: Icon(Icons.credit_card, color: color.primary, size: 24.r),
-                label: "",
-              ),
+              NavigationDestination(icon: Icon(Icons.event,color: color.primary,), label: ""),
               NavigationDestination(
                 icon: Icon(
                   Icons.account_circle_outlined,
