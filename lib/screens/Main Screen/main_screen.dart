@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
-  static ValueNotifier<int> selectedIndexNotifer = ValueNotifier(1);
+  static ValueNotifier<int> selectedIndexNotifer = ValueNotifier(2);
   final _pages = const [
     AnalyticsScreen(),
     HomeScreen(),
