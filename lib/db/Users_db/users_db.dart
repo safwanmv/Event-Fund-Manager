@@ -2,6 +2,7 @@ import 'package:expense_tracker/models/Users/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+const SESSION_DB_NAME = 'session_db';
 // ignore: constant_identifier_names
 const USER_DB_NAME = 'users_db';
 
@@ -66,15 +67,21 @@ class UserDb implements UserDbFunctions {
   @override
   Future<void> updateUser(UserModel user) async {
     await _userBox.put(user.id, user);
+    await refreshUI(); 
   }
 
-  Future<void> addDataToDB({
+  Future<bool> addDataToDB({
     required String name,
     required String email,
     required String password,
   }) async {
+    final existingUser = getUserByEmail(email);
+    if (existingUser != null) {
+      return false;
+    }
     final dataToDB = UserModel(name: name, email: email, password: password);
     await UserDb.instance.insertUser(dataToDB);
+    return true;
   }
 
   ValueNotifier<UserModel?> activeUserNotifier = ValueNotifier(null);
@@ -82,8 +89,29 @@ class UserDb implements UserDbFunctions {
   Future<void> setActiveUser(String email) async {
     final user = getUserByEmail(email);
     if (user != null) {
-      activeUserNotifier.value = user; 
-      print("passed the value");// ✅ works
+      activeUserNotifier.value = user;
+    }
+    final sessionBox = await Hive.openBox<String>(SESSION_DB_NAME);
+    await sessionBox.put('active_user_email', email);
+    print("Active user set & persisted");
+  }
+
+  Future<void> clearActiveUser() async {
+    activeUserNotifier.value = null;
+    final sessionBox = await Hive.openBox<String>(SESSION_DB_NAME);
+    await sessionBox.delete('active_user_email');
+  }
+
+  Future<void>loadActiveUser()async{
+    final sessionBox=await Hive.openBox<String>(SESSION_DB_NAME);
+    final email=sessionBox.get('active_user_email');
+    if(email !=null){
+      final user=getUserByEmail(email);
+      if(user!= null){
+        activeUserNotifier.value=user;
+        print("Loaded active User: ${user.email}");
+      }
     }
   }
+
 }

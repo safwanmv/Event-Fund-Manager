@@ -154,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ).showSnackBar(const SnackBar(content: Text("Incorrect Password")));
         return;
       }
-
+      UserDb.instance.setActiveUser(email);
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (ctx) => MainScreen()));

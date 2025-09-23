@@ -154,21 +154,32 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           String name = _nameController.text.trim();
                           String email = _emailController.text.trim();
                           String password = _passwordController.text.trim();
 
-                          UserDb.instance.addDataToDB(
+                          final success = await UserDb.instance.addDataToDB(
                             name: name,
                             email: email,
                             password: password,
                           );
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (ctx) => MainScreen()),
-
-                          );
+                          if (!mounted) return;
+                          if (!success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "User with this email already exists",
+                                ),
+                              ),
+                            );
+                          } else {
+                            UserDb.instance.setActiveUser(email);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (ctx) => MainScreen()),
+                            );
+                          }
                         }
                       },
                       child: Text(
