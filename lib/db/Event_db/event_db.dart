@@ -19,6 +19,7 @@ abstract class EventDbFunctions {
   Future<void> updateEvent(EventModel obj);
   Future<void> deleteEvent(String id);
   Future<void> refreshUI();
+  EventModel? getEventByJoinCode(String code);
 }
 
 class EventDb extends EventDbFunctions {
@@ -29,6 +30,7 @@ class EventDb extends EventDbFunctions {
   }
 
   ValueNotifier<List<EventModel>> eventListNotifer = ValueNotifier([]);
+  ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
   late final Box<EventModel> _eventBox;
 
   @override
@@ -44,12 +46,18 @@ class EventDb extends EventDbFunctions {
     String createdBy,
     double targetedAmount,
   ) async {
+    String uniqueCode;
+
+    do {
+      uniqueCode = EventModel.generateJoinCode(title);
+    } while (_eventBox.values.any((event) => event.joinCode == uniqueCode));
     final event = EventModel(
       title: title,
       description: description,
       date: date,
       createdBy: createdBy,
       targetedAmount: targetedAmount,
+      joinCode: uniqueCode,
     );
     await _eventBox.put(event.id, event);
     await refreshUI();
@@ -85,5 +93,14 @@ class EventDb extends EventDbFunctions {
   Future<void> deleteEvent(String id) async {
     await _eventBox.delete(id);
     await refreshUI();
+  }
+
+  @override
+  EventModel? getEventByJoinCode(String code) {
+    try {
+      return _eventBox.values.firstWhere((i) => i.joinCode == code);
+    } catch (_) {
+      return null;
+    }
   }
 }

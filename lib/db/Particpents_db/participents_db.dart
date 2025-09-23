@@ -35,23 +35,6 @@ class ParticipentsDb extends ParticipentsDbFunctions {
   }
 
   @override
-  Future<void> refreshUI() async {
-    participantsListNotifer.value = getAllParticipants();
-    participantsListNotifer.value = [...participantsListNotifer.value];
-  }
-
-  @override
-  Future<void> updateParticipants(ParticipantsModel obj) async {
-    await _participentsBox.put(obj.id, obj);
-  }
-
-  @override
-  Future<void> deleteParticipants(String id) async {
-    await _participentsBox.delete(id);
-    await refreshUI();
-  }
-
-  @override
   Future<void> addParticipant(ParticipantsModel obj) async {
     await _participentsBox.put(obj.id, obj);
     await refreshUI();
@@ -63,16 +46,34 @@ class ParticipentsDb extends ParticipentsDbFunctions {
   }
 
   @override
-  List<ParticipantsModel> getParticipantsByEventId(String eventId) {
-    return _participentsBox.values.where((i) => i.eventId == eventId).toList();
-  }
-
-  @override
   ParticipantsModel? getParticipantsById(String id) {
     try {
       return _participentsBox.get(id);
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  List<ParticipantsModel> getParticipantsByEventId(String eventId) {
+    return _participentsBox.values.where((i) => i.eventId == eventId).toList();
+  }
+
+  @override
+  Future<void> updateParticipants(ParticipantsModel obj) async {
+    await _participentsBox.put(obj.id, obj);
+    await refreshUI();
+  }
+
+  @override
+  Future<void> deleteParticipants(String id) async {
+    await _participentsBox.delete(id);
+    await refreshUI();
+  }
+
+  @override
+  Future<void> refreshUI() async {
+    participantsListNotifer.value = getAllParticipants();
+    participantsListNotifer.value = [...participantsListNotifer.value];
   }
 }
