@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/screens/Main%20Screen/Home/eventAddBottomSheet.dart';
 import 'package:expense_tracker/screens/chart/bar_chart_screen.dart';
 import 'package:expense_tracker/widgets/homcreen_top_banner/homescreen_top_banner.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         suffixIcon: _isSearching
                             ? IconButton(
                                 icon: const Icon(Icons.close),
-                    
+
                                 onPressed: () {
                                   setState(() {
                                     _isSearching = false;
@@ -94,6 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         : GestureDetector(
                             onTap: () {
                               log("message");
+                              showModalBottomSheet(context: context,isScrollControlled: true, builder: (context)=>Eventaddbottomsheet());
+                              Eventaddbottomsheet();
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

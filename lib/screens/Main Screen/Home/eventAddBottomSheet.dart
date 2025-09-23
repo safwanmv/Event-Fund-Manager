@@ -1,6 +1,10 @@
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
+import 'package:expense_tracker/db/Event_db/event_db.dart';
+import 'package:expense_tracker/db/Users_db/users_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class Eventaddbottomsheet extends StatefulWidget {
   const Eventaddbottomsheet({super.key});
@@ -14,8 +18,10 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _targetedAmountController = TextEditingController();
+  DateTime? selectDateTime;
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.only(
         right: 26.w,
@@ -32,6 +38,7 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
               "Add Events",
               style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 12.h),
             CTextFromField(
               controller: _titleController,
               title: "Title",
@@ -42,6 +49,7 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                 return null;
               },
             ),
+            SizedBox(height: 10.h),
             CTextFromField(
               controller: _descriptionController,
               title: "Description",
@@ -52,9 +60,10 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                 return null;
               },
               keyboardType: TextInputType.multiline,
-              maxLength: null,
+              maxLines: null,
               minLines: 3,
             ),
+            SizedBox(height: 12.h),
             CTextFromField(
               controller: _targetedAmountController,
               title: "Targeted Amount",
@@ -64,10 +73,62 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                 }
                 return null;
               },
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 5.h),
+            TextButton.icon(
+              onPressed: () async {
+                final selectDateTimeTemp = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now().subtract(Duration(days: 365)),
+                  lastDate: DateTime.now(),
+                );
+                if (selectDateTimeTemp == null) {
+                  return;
+                }
+                setState(() {
+                  selectDateTime = selectDateTimeTemp;
+                });
+              },
+              label: Text(
+                selectDateTime == null
+                    ? "Select Date"
+                    : formattedDate(selectDateTime!),
+
+                style: TextStyle(fontSize: 16.sp),
+              ),
+              icon: Icon(Icons.calendar_month),
+            ),
+            SizedBox(height: 8.h),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 6.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(12.r),
+                ),
+                backgroundColor: color.primary,
+                foregroundColor: color.surface,
+              ),
+              onPressed: () {
+                if(formKey.currentState!.validate()){
+                  final title=_titleController.text.trim();
+                  final description=_descriptionController.text.trim();
+                  final targetedAmount=_targetedAmountController.text.trim();
+                  final date=selectDateTime;
+                  final userName=
+                  EventModel(title: title, description: description, date: date!, createdBy: usermo, targetedAmount: targetedAmount)
+                }
+              },
+              child: Text("Submit"),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String formattedDate(DateTime date) {
+    return DateFormat('dd MMM yyyy').format(date);
   }
 }
