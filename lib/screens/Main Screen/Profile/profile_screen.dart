@@ -1,6 +1,5 @@
 import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/main.dart';
-import 'package:expense_tracker/models/Users/user_model.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -9,14 +8,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: UserDb.instance.userListNotifier,
-      builder: (context, List<UserModel> userList, _) {
-        if (userList.isEmpty) {
+      valueListenable: UserDb.instance.activeUserNotifier,
+      builder: (context,activeUser, _) {
+        if (activeUser==null) {
           return const Center(child: CircularProgressIndicator());
         }
-
-        final userData = userList.first;
-
         return Center(
           child: SafeArea(
             child: Column(
@@ -32,10 +28,10 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           onPressed: () => isDark.value = !isDark.value,
                         ),
-                        Text(userData.name),
-                        Text(userData.email),
-                        Text(userData.id),
-                        Text(userData.password),
+                        Text(activeUser.name),
+                        Text(activeUser.email),
+                        Text(activeUser.id),
+                        Text(activeUser.password),
                       ],
                     );
                   },

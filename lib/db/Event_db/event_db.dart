@@ -30,7 +30,7 @@ class EventDb extends EventDbFunctions {
   }
 
   ValueNotifier<List<EventModel>> eventListNotifer = ValueNotifier([]);
-  ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
+  // ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
   late final Box<EventModel> _eventBox;
 
   @override

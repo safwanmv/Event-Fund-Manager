@@ -1,6 +1,10 @@
 import 'package:expense_tracker/db/Category_db/category_db.dart';
+import 'package:expense_tracker/db/Event_db/event_db.dart';
+import 'package:expense_tracker/db/Particpents_db/participents_db.dart';
 import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
+import 'package:expense_tracker/models/Participants/participants_model.dart';
 import 'package:expense_tracker/models/Users/user_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
@@ -10,16 +14,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(CategoryTypeAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
   Hive.registerAdapter(TransactionsModelAdapter());
   Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(EventModelAdapter());
+  Hive.registerAdapter(ParticipantsModelAdapter());
 
   await TransactionDb.instance.initTransactionBox();
   await CategoryDB.instance.initCategoryBox();
   await UserDb.instance.initUserBox();
+  await UserDb.instance.loadActiveUser();
+  await EventDb.instance.initEventBox();
+  await ParticipentsDb.instance.initParticipantBox();
 
   runApp(MyApp());
 }

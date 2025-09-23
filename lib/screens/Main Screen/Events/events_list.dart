@@ -11,6 +11,10 @@ class EventsList extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: EventDb.instance.eventListNotifer,
       builder: (context, eventList, _) {
+        if(eventList.isEmpty){
+          return 
+          Center(child: Text("The list is empty"));
+        }
         return ListView.separated(
           itemBuilder: (context, index) {
             final value=eventList[index];
