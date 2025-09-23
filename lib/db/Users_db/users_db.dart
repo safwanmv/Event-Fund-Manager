@@ -77,5 +77,13 @@ class UserDb implements UserDbFunctions {
     await UserDb.instance.insertUser(dataToDB);
   }
 
-  
+  ValueNotifier<UserModel?> activeUserNotifier = ValueNotifier(null);
+
+  Future<void> setActiveUser(String email) async {
+    final user = getUserByEmail(email);
+    if (user != null) {
+      activeUserNotifier.value = user; 
+      print("passed the value");// ✅ works
+    }
+  }
 }

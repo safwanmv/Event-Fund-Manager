@@ -1,3 +1,4 @@
+import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
@@ -114,108 +115,113 @@ class BalanceCard extends StatelessWidget {
               (previousValue, element) => previousValue + element.amount,
             );
         double balance = totalIncome - totalExpense;
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Row(
+        return ValueListenableBuilder(
+          valueListenable: UserDb.instance.activeUserNotifier,
+          builder: (context, activeUser, _) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+              child: SafeArea(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(29.r),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width:
-                                  double.infinity, // Fills the Card horizontally
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF89CFF0),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(29.r),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(29.r),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width:
+                                      double.infinity, // Fills the Card horizontally
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF89CFF0),
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(29.r),
+                                    ),
+                                  ),
+                                  constraints: BoxConstraints(minHeight: 100.h),
+                                  padding: EdgeInsets.all(16.r),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        activeUser?.name??"Loading..",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            maskCardNumber("102034324"),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.sp,
+                                            ),
+                                          ),
+                                          Text(
+                                            "11/25",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              constraints: BoxConstraints(minHeight: 100.h),
-                              padding: EdgeInsets.all(16.r),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Mohammed Safwan.MV",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                Container(
+                                  padding: EdgeInsets.all(16.r), // Add padding
+                          
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        maskCardNumber("102034324"),
+                                        "Balance",
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           fontSize: 16.sp,
                                         ),
                                       ),
                                       Text(
-                                        "11/25",
+                                        "₹$balance",
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16.sp,
+                                          fontSize: 40.sp,
+                                          fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Total week Expense      23.3%",
+                                            style: TextStyle(
+                                              color: color.primary,
+                                              fontSize: 16.sp,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              padding: EdgeInsets.all(16.r), // Add padding
-                      
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Balance",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                  Text(
-                                    "₹$balance",
-                                    style: TextStyle(
-                                      fontSize: 40.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Total week Expense      23.3%",
-                                        style: TextStyle(
-                                          color: color.primary,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         );
       },
     );
