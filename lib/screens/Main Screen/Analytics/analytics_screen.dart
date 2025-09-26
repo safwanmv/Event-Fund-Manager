@@ -30,64 +30,63 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final color = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w, top: 10.h),
-      child: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          /// ---- Collapsible + Shrinkable Header ----
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _AnalyticsHeaderDelegate(
-              minExtent: screenHeight * 0.5.h, // stays until half screen
-              maxExtent: screenHeight * 0.6.h, // fully expanded
-              selectedType: selectedType,
-              onTypeChanged: (type) {
-                setState(() => selectedType = type);
-              },
-            ),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        /// ---- Collapsible + Shrinkable Header ----
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _AnalyticsHeaderDelegate(
+            minExtent: screenHeight * 0.5.h, // stays until half screen
+            maxExtent: screenHeight * 0.6.h, // fully expanded
+            selectedType: selectedType,
+            onTypeChanged: (type) {
+              setState(() => selectedType = type);
+            },
           ),
-      
-          /// ---- Recent Transaction Title ----
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 1.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Recent Transaction",
-                    style: TextStyle(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w500,
-                      color: color.primary,
-                    ),
+        ),
+    
+        /// ---- Recent Transaction Title ----
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 1.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Recent Transaction",
+                  style: TextStyle(
+                    fontSize: 25.sp,
+                    fontWeight: FontWeight.w500,
+                    color: color.primary,
                   ),
-                  GestureDetector(
-                    onTap: scrollToList,
-                    child: Text("See All", style: TextStyle(fontSize: 14.sp)),
-                  ),
-                ],
-              ),
+                ),
+                GestureDetector(
+                  onTap: scrollToList,
+                  child: Text("See All", style: TextStyle(fontSize: 14.sp)),
+                ),
+              ],
             ),
           ),
-      
-          /// ---- Transaction List ----
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: screenHeight * 0.35,
-              child: TransactionList(type: selectedType),
-            ),
+        ),
+    
+        /// ---- Transaction List ----
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: screenHeight * 0.35,
+            child: TransactionList(type: selectedType),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 /// Custom Delegate to control shrinking
 class _AnalyticsHeaderDelegate extends SliverPersistentHeaderDelegate {
+  @override
   final double minExtent;
+  @override
   final double maxExtent;
   final CategoryType selectedType;
   final ValueChanged<CategoryType> onTypeChanged;

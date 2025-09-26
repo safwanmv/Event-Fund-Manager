@@ -25,67 +25,62 @@ class _BalanceScreenState extends State<BalanceScreen> {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w, top: 10.h),
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: BalanceCard()),
-                SizedBox(width: 20.w),
-                Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => TransactionAddBottomSheet(),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        padding: EdgeInsets.all(25.r),
+    return SafeArea(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: BalanceCard()),
+              Column(
+                children: [
+                  OutlinedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => TransactionAddBottomSheet(),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
-                      child: Icon(Icons.add, size: 24.r),
+                      padding: EdgeInsets.all(25.r),
                     ),
-                    SizedBox(height: 20.h),
-                    OutlinedButton(
-                      onPressed: () {
-                        showAddCategoryBottomSheet(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        padding: EdgeInsets.all(25.r),
+                    child: Icon(Icons.add, size: 24.r),
+                  ),
+                  SizedBox(height: 40.h,),
+                  OutlinedButton(
+                    onPressed: () {
+                      showAddCategoryBottomSheet(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
-                      child: Icon(Icons.category, size: 24.r),
+                      padding: EdgeInsets.all(25.r),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Transactions", style: TextStyle(fontSize: 16.sp)),
-                Text(
-                  "Amount",
-                  style: TextStyle(color: color.primary, fontSize: 14.sp),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-            Expanded(child: TransactionList()),
-          ],
-        ),
+                    child: Icon(Icons.category, size: 24.r),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+    
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Transactions", style: TextStyle(fontSize: 16.sp)),
+              Text(
+                "Amount",
+                style: TextStyle(color: color.primary, fontSize: 14.sp),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Expanded(child: TransactionList()),
+        ],
       ),
     );
   }

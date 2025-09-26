@@ -24,9 +24,8 @@ class MainScreen extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: Scaffold(
-        backgroundColor: color.onSurfaceVariant,
         body: Padding(
-          padding: const EdgeInsets.only(bottom: 0.0),
+          padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
               color: color.surface,

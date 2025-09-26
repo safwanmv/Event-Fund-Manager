@@ -55,7 +55,7 @@ class BarChartScreen extends StatelessWidget {
                     final amt = topIncomes[idx].amount;
 
                     return BarTooltipItem(
-                      "${amt.toStringAsFixed(2)}",
+                      "$amt.toStringAsFixed(2)",
                       TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

@@ -40,92 +40,89 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: _isSearching
-                          ? screenWidth - 52.w
-                          : screenWidth * 0.55.r,
-                      child: CTextFromField(
-                        controller: _searchController,
-                        title: "Search the Event",
-                        validator: (value) {
-                          return null;
-                        },
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _isSearching
-                            ? IconButton(
-                                icon: const Icon(Icons.close),
-
-                                onPressed: () {
-                                  setState(() {
-                                    _isSearching = false;
-                                    _searchController.clear();
-                                  });
-                                },
-                              )
-                            : null,
-                        textInputAction: TextInputAction.search,
-                        onTap: () {
-                          setState(() {
-                            _isSearching = true;
-                          });
-                        },
-                        onFieldSubmitted: (value) {
-                          EventDb.instance.getEventsById(
-                            _searchController.text.trim(),
-                          );
-                          log("clicked");
-                        },
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    width: _isSearching
+                        ? screenWidth - 52.w
+                        : screenWidth * 0.55.r,
+                    child: CTextFromField(
+                      controller: _searchController,
+                      title: "Search the Event",
+                      validator: (value) {
+                        return null;
+                      },
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _isSearching
+                          ? IconButton(
+                              icon: const Icon(Icons.close),
+            
+                              onPressed: () {
+                                setState(() {
+                                  _isSearching = false;
+                                  _searchController.clear();
+                                });
+                              },
+                            )
+                          : null,
+                      textInputAction: TextInputAction.search,
+                      onTap: () {
+                        setState(() {
+                          _isSearching = true;
+                        });
+                      },
+                      onFieldSubmitted: (value) {
+                        EventDb.instance.getEventsById(
+                          _searchController.text.trim(),
+                        );
+                        log("clicked");
+                      },
                     ),
                   ),
-                  SizedBox(width: 10.w),
-
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: _isSearching
-                        ? const SizedBox.shrink()
-                        : GestureDetector(
-                            onTap: () {
-                              log("message");
-                              showModalBottomSheet(context: context,isScrollControlled: true, builder: (context)=>Eventaddbottomsheet());
-                              Eventaddbottomsheet();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 13.h,
-                                horizontal: 12.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: color.onSurfaceVariant,
-                                borderRadius: BorderRadius.circular(18.r),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.add),
-                                  Text(
-                                    " Create Events",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                ),
+                SizedBox(width: 10.w),
+            
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: _isSearching
+                      ? const SizedBox.shrink()
+                      : GestureDetector(
+                          onTap: () {
+                            log("message");
+                            showModalBottomSheet(context: context,isScrollControlled: true, builder: (context)=>Eventaddbottomsheet());
+                            Eventaddbottomsheet();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 13.h,
+                              horizontal: 12.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: color.onSurfaceVariant,
+                              borderRadius: BorderRadius.circular(18.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add),
+                                Text(
+                                  " Create Events",
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                  ),
-                ],
-              ),
+                        ),
+                ),
+              ],
             ),
 
             SizedBox(height: 10.h),
