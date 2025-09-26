@@ -25,21 +25,24 @@ class MainScreen extends StatelessWidget {
       bottom: false,
       child: Scaffold(
         backgroundColor: color.onSurfaceVariant,
-        body: Container(
-          decoration: BoxDecoration(
-            color: color.surface,
-
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40.r),
-              bottomRight: Radius.circular(40.r),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: color.surface,
+          
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(40.r),
+                bottomRight: Radius.circular(40.r),
+              ),
             ),
-          ),
-
-          child: ValueListenableBuilder(
-            valueListenable: selectedIndexNotifer,
-            builder: (BuildContext ctx, int updatedIndex, _) {
-              return IndexedStack(index: updatedIndex, children: _pages);
-            },
+          
+            child: ValueListenableBuilder(
+              valueListenable: selectedIndexNotifer,
+              builder: (BuildContext ctx, int updatedIndex, _) {
+                return IndexedStack(index: updatedIndex, children: _pages);
+              },
+            ),
           ),
         ),
 

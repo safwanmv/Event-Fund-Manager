@@ -30,8 +30,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final color = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: CustomScrollView(
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w, top: 10.h),
+      child: CustomScrollView(
         controller: _scrollController,
         slivers: [
           /// ---- Collapsible + Shrinkable Header ----
@@ -46,7 +47,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               },
             ),
           ),
-
+      
           /// ---- Recent Transaction Title ----
           SliverToBoxAdapter(
             child: Padding(
@@ -70,7 +71,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ),
             ),
           ),
-
+      
           /// ---- Transaction List ----
           SliverToBoxAdapter(
             child: SizedBox(
@@ -100,10 +101,12 @@ class _AnalyticsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final color = Theme.of(context).colorScheme;
-    final shrinkRatio =
-        (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1);
+    final shrinkRatio = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1);
 
     return Container(
       padding: EdgeInsets.all(12.r),
@@ -120,28 +123,28 @@ class _AnalyticsHeaderDelegate extends SliverPersistentHeaderDelegate {
           Text(
             "Total ${selectedType == CategoryType.expense ? 'Expenses' : 'Income'} of this Month",
             style: TextStyle(
-                color: color.primary, fontSize: (15 - 3 * shrinkRatio).sp),
+              color: color.primary,
+              fontSize: (15 - 3 * shrinkRatio).sp,
+            ),
           ),
           SizedBox(height: 12.h * (1 - shrinkRatio)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChoiceChip(
-                label: Text("Expense",
-                    style: TextStyle(
-                      color: color.primary,
-                      fontSize: 14.sp,
-                    )),
+                label: Text(
+                  "Expense",
+                  style: TextStyle(color: color.primary, fontSize: 14.sp),
+                ),
                 selected: selectedType == CategoryType.expense,
                 onSelected: (val) => onTypeChanged(CategoryType.expense),
               ),
               SizedBox(width: 8.w),
               ChoiceChip(
-                label: Text("Income",
-                    style: TextStyle(
-                      color: color.primary,
-                      fontSize: 14.sp,
-                    )),
+                label: Text(
+                  "Income",
+                  style: TextStyle(color: color.primary, fontSize: 14.sp),
+                ),
                 selected: selectedType == CategoryType.income,
                 onSelected: (val) => onTypeChanged(CategoryType.income),
               ),
