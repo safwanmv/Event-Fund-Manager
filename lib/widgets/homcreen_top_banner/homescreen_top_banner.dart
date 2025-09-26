@@ -85,7 +85,7 @@ class HomescreenTopBanner extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  value.type.toString(),
+                                  value.type.name,
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w500,
