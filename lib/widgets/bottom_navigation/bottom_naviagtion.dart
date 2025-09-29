@@ -14,13 +14,17 @@ class BottomNaviagtion extends StatelessWidget {
       builder: (BuildContext ctx, int updatedIndex, _) {
         return Container(
           decoration: BoxDecoration(
-            color:  color.onSurfaceVariant,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(12.r),topRight: Radius.circular(12.r))
+            color: color.onSurfaceVariant,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(22.r),
+              topRight: Radius.circular(22.r),
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.only(bottom: 1.h),
             child: NavigationBar(
-              backgroundColor: color.onSurfaceVariant,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               selectedIndex: updatedIndex,
               onDestinationSelected: (newIndex) {
                 MainScreen.selectedIndexNotifer.value = newIndex;
@@ -30,9 +34,13 @@ class BottomNaviagtion extends StatelessWidget {
                   icon: Icon(Icons.pie_chart, color: color.primary, size: 24.r),
                   label: "",
                 ),
-          
+
                 NavigationDestination(
-                  icon: Icon(Icons.credit_card, color: color.primary, size: 24.r),
+                  icon: Icon(
+                    Icons.credit_card,
+                    color: color.primary,
+                    size: 24.r,
+                  ),
                   label: "",
                 ),
                 NavigationDestination(
@@ -43,7 +51,10 @@ class BottomNaviagtion extends StatelessWidget {
                   ),
                   label: "",
                 ),
-                NavigationDestination(icon: Icon(Icons.event,color: color.primary,), label: ""),
+                NavigationDestination(
+                  icon: Icon(Icons.event, color: color.primary),
+                  label: "",
+                ),
                 NavigationDestination(
                   icon: Icon(
                     Icons.account_circle_outlined,

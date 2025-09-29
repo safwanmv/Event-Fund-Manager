@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Home/eventAddBottomSheet.dart';
 import 'package:expense_tracker/screens/chart/bar_chart_screen.dart';
 import 'package:expense_tracker/widgets/homcreen_top_banner/homescreen_top_banner.dart';
@@ -18,13 +19,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? selectedValue;
-
+  // List<EventModel>allEvents=[];
   @override
   void initState() {
     super.initState();
 
     TransactionDb.instance.refreshUI();
     EventDb.instance.refreshUI();
+    // allEvents=EventDb.instance.getAllEvents();    
+    EventDb.instance.filteredEventsNotifer.value = [];
   }
 
   final _searchController = TextEditingController();
@@ -60,11 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       suffixIcon: _isSearching
                           ? IconButton(
                               icon: const Icon(Icons.close),
-            
+
                               onPressed: () {
                                 setState(() {
                                   _isSearching = false;
                                   _searchController.clear();
+                                  EventDb.instance.filteredEventsNotifer.value =
+                                      EventDb.instance.getAllEvents();
                                 });
                               },
                             )
@@ -75,17 +80,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           _isSearching = true;
                         });
                       },
-                      onFieldSubmitted: (value) {
-                        EventDb.instance.getEventsById(
-                          _searchController.text.trim(),
-                        );
-                        log("clicked");
+                      onChanged: (value) {
+                        if(value.isEmpty){
+                          EventDb.instance.filteredEventsNotifer.value=[];
+                          return;
+                        }
+                        final query=value.trim();
+                        final filtered = EventDb.instance.getAllEvents().where((i) {
+                          return
+                              i.joinCode==query;
+                        }).toList();
+                        EventDb.instance.filteredEventsNotifer.value = filtered;
                       },
                     ),
                   ),
                 ),
                 SizedBox(width: 10.w),
-            
+
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child: _isSearching
@@ -93,7 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       : GestureDetector(
                           onTap: () {
                             log("message");
-                            showModalBottomSheet(context: context,isScrollControlled: true, builder: (context)=>Eventaddbottomsheet());
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => Eventaddbottomsheet(),
+                            );
                             Eventaddbottomsheet();
                           },
                           child: Container(
@@ -124,8 +139,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
             SizedBox(height: 10.h),
+            _isSearching==true && _searchController.text.trim().length==8 ?
+            ValueListenableBuilder<List<EventModel>>(
+              valueListenable: EventDb.instance.filteredEventsNotifer,
+              builder: (context, events, _) {
+                if(_searchController.text.isEmpty){
+                  return SizedBox();
+                }
+                if (events.isEmpty) {
+                  return const Center(child: Text("No Event found"));
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
+                    return Card(
+                      child: ListTile(
+                      textColor: color.onSurface,
+                        title: Text(event.title),
+                        subtitle: Text(event.joinCode),
+                        trailing: Text(event.createdBy),
+                      ),
+                    );
+                  },
+                );
+              },
+            ):
+            
+            SizedBox(height: 10.h),
+
             HomescreenTopBanner(),
             Padding(
               padding: EdgeInsets.only(left: 22.w),

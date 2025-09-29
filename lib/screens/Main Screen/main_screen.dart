@@ -25,7 +25,7 @@ class MainScreen extends StatelessWidget {
       bottom: false,
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 8.0,left: 8,right: 8,),
           child: Container(
             decoration: BoxDecoration(
               color: color.surface,
