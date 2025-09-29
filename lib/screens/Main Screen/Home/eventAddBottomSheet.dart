@@ -117,7 +117,7 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                     backgroundColor: color.primary,
                     foregroundColor: color.surface,
                   ),
-                  onPressed: () {
+                  onPressed: () async{
                     if (formKey.currentState!.validate()) {
                       final title = _titleController.text.trim();
                       final description = _descriptionController.text.trim();
@@ -127,7 +127,8 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                       final createdBy = activeUser?.name ?? "no name";
                       final DateTime date=DateTime.now();
                       EventDb.instance.createEvent(title, description, date, createdBy, targetedAmountDouble);
-                    
+                    await EventDb.instance.refreshUI();
+                    if(!mounted) return;
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

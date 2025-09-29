@@ -1,6 +1,7 @@
 import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:collection/collection.dart';
 
 // ignore: constant_identifier_names
 const EVENT_DB_NAME = 'events_db';
@@ -30,7 +31,7 @@ class EventDb extends EventDbFunctions {
   }
 
   ValueNotifier<List<EventModel>> eventListNotifer = ValueNotifier([]);
-  // ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
+  ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
   late final Box<EventModel> _eventBox;
 
   @override
@@ -47,7 +48,7 @@ class EventDb extends EventDbFunctions {
     double targetedAmount,
   ) async {
     String uniqueCode;
-
+    print("0");
     do {
       uniqueCode = EventModel.generateJoinCode(title);
     } while (_eventBox.values.any((event) => event.joinCode == uniqueCode));
@@ -79,9 +80,10 @@ class EventDb extends EventDbFunctions {
 
   @override
   Future<void> refreshUI() async {
-    eventListNotifer.value.clear();
-    eventListNotifer.value.addAll(getAllEvents());
-    eventListNotifer.value = [...eventListNotifer.value];
+    final events = getAllEvents();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      eventListNotifer.value = events;
+    });
   }
 
   @override
@@ -98,9 +100,13 @@ class EventDb extends EventDbFunctions {
   @override
   EventModel? getEventByJoinCode(String code) {
     try {
-      return _eventBox.values.firstWhere((i) => i.joinCode == code);
+      return _eventBox.values.firstWhereOrNull((i) => i.joinCode == code);
     } catch (_) {
       return null;
     }
+  }
+
+  List<EventModel> getEventByUser(String userName) {
+    return _eventBox.values.where((i) => i.createdBy == userName).toList();
   }
 }

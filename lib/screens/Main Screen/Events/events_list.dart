@@ -53,8 +53,9 @@ class EventsList extends StatelessWidget {
                         ),
                       ),
                     ),
-                    subtitle: Text(value.description),
+                    subtitle: Text(value.joinCode),
                     trailing: Text(value.participants.length.toString()),
+
                   ),
                 ),
               ),

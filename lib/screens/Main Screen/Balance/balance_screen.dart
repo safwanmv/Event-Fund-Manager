@@ -1,5 +1,7 @@
+import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/category_add_bottom_sheet.dart';
@@ -16,10 +18,12 @@ class BalanceScreen extends StatefulWidget {
 }
 
 class _BalanceScreenState extends State<BalanceScreen> {
+  EventModel? selectedEvent;
   @override
   void initState() {
     super.initState();
     TransactionDb.instance.refreshUI();
+    EventDb.instance.refreshUI();
   }
 
   @override
@@ -28,6 +32,43 @@ class _BalanceScreenState extends State<BalanceScreen> {
     return SafeArea(
       child: Column(
         children: [
+          ValueListenableBuilder<List<EventModel>>(
+            valueListenable: EventDb.instance.eventListNotifer,
+            builder: (context, allEvents, _) {
+              final activeUser = UserDb.instance.activeUserNotifier.value;
+              if (activeUser == null) {
+                return Text("No user");
+              }
+              final userEvents = allEvents
+                  .where((i) => i.createdBy == activeUser.name)
+                  .toList();
+
+              return DropdownButton<EventModel>(
+                hint: Text(
+                  "Select Your Event",
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                value: selectedEvent,
+                isExpanded: false,
+                underline: SizedBox(),
+                items: userEvents.map((event) {
+                  return DropdownMenuItem<EventModel>(
+                    value: event,
+                    child: Text(event.title, style: TextStyle(fontSize: 14.sp)),
+                  );
+                }).toList(),
+                onChanged: (event) {
+                  WidgetsBinding.instance.addPostFrameCallback((_){
+
+           
+                  setState(() {
+                    selectedEvent = event;
+                  });
+                },
+              );
+                     });
+            },
+          ),
           Row(
             children: [
               Expanded(child: BalanceCard()),
@@ -49,7 +90,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                     child: Icon(Icons.add, size: 24.r),
                   ),
-                  SizedBox(height: 40.h,),
+                  SizedBox(height: 40.h),
                   OutlinedButton(
                     onPressed: () {
                       showAddCategoryBottomSheet(context);
@@ -67,7 +108,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
             ],
           ),
           SizedBox(height: 20.h),
-    
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -128,8 +169,8 @@ class BalanceCard extends StatelessWidget {
                             child: Column(
                               children: [
                                 Container(
-                                  width:
-                                      double.infinity, // Fills the Card horizontally
+                                  width: double
+                                      .infinity, // Fills the Card horizontally
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF89CFF0),
                                     borderRadius: BorderRadius.vertical(
@@ -139,10 +180,11 @@ class BalanceCard extends StatelessWidget {
                                   constraints: BoxConstraints(minHeight: 100.h),
                                   padding: EdgeInsets.all(16.r),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        activeUser?.name??"Loading..",
+                                        activeUser?.name ?? "Loading..",
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14.sp,
@@ -174,9 +216,10 @@ class BalanceCard extends StatelessWidget {
                                 ),
                                 Container(
                                   padding: EdgeInsets.all(16.r), // Add padding
-                          
+
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Balance",
@@ -216,7 +259,7 @@ class BalanceCard extends StatelessWidget {
                 ),
               ),
             );
-          }
+          },
         );
       },
     );
