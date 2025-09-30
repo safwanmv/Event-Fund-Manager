@@ -1,5 +1,3 @@
-
-
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
@@ -18,15 +16,15 @@ class PieChartScreen extends StatefulWidget {
 }
 
 class _PieChartScreenState extends State<PieChartScreen> {
-    late CategoryType selectedType;
+  late CategoryType selectedType;
 
   @override
   void initState() {
     super.initState();
 
-  selectedType = widget.selectedType ?? CategoryType.expense;
+    selectedType = widget.selectedType ?? CategoryType.expense;
     TransactionDb.instance.refreshUI();
-  } 
+  }
 
   int isSelectedIndex = -1;
   @override
@@ -41,6 +39,17 @@ class _PieChartScreenState extends State<PieChartScreen> {
             final categoryTotals = calculateCategoryTotals(newList);
             final titles = categoryTotals.keys.toList();
             final List<double> values = categoryTotals.values.toList();
+            if (values.isEmpty) {
+              return SizedBox(
+                height: 300.h,
+                child: Center(
+                  child: Text(
+                    "No ${widget.selectedType == CategoryType.expense ? "expenses" : "income"} to show",
+                    style: TextStyle(fontSize: 16.sp, color: color.onSurface),
+                  ),
+                ),
+              );
+            }
 
             final double total = values.fold<double>(
               0.0,
@@ -103,7 +112,7 @@ class _PieChartScreenState extends State<PieChartScreen> {
                         widget.selectedType == CategoryType.expense
                             ? "Total Expense"
                             : "Totoal Income",
-                        style: TextStyle(color: color.primary,fontSize: 18.sp),
+                        style: TextStyle(color: color.primary, fontSize: 18.sp),
                       ),
                       Text(
                         "₹$total",
