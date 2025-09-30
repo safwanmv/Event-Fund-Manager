@@ -20,7 +20,7 @@ class CategoryModelAdapter extends TypeAdapter<CategoryModel> {
       id: fields[0] as String?,
       name: fields[1] as String,
       type: fields[3] as CategoryType,
-      isDeleted: fields[2] as bool,
+      isDeleted: fields[2] as bool, eventId: '',
     );
   }
 

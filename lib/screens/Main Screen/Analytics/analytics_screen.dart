@@ -1,6 +1,8 @@
+import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/screens/chart/pie_chart_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
+import 'package:expense_tracker/widgets/Empty_data/empty_data_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,57 +27,79 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        /// ---- Collapsible + Shrinkable Header ----
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: _AnalyticsHeaderDelegate(
-            minExtent: screenHeight * 0.5.h, // stays until half screen
-            maxExtent: screenHeight * 0.6.h, // fully expanded
-            selectedType: selectedType,
-            onTypeChanged: (type) {
-              setState(() => selectedType = type);
-            },
-          ),
-        ),
-    
-        /// ---- Recent Transaction Title ----
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 1.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Recent Transaction",
-                  style: TextStyle(
-                    fontSize: 25.sp,
-                    fontWeight: FontWeight.w500,
-                    color: color.primary,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: scrollToList,
-                  child: Text("See All", style: TextStyle(fontSize: 14.sp)),
-                ),
-              ],
-            ),
-          ),
-        ),
-    
-        /// ---- Transaction List ----
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: screenHeight * 0.35,
-            child: TransactionList(type: selectedType),
-          ),
+    return Column(
+      children: [
+        ValueListenableBuilder(
+          valueListenable: EventDb.instance.eventListNotifer,
+          builder: (context, eventList, _) {
+            return eventList.isEmpty
+                ? Center(child: EmptyDataContainer())
+                : Expanded(
+                  child: 
+                  CustomScrollView(
+                      controller: _scrollController,
+                      slivers: [
+                        /// ---- Collapsible + Shrinkable Header ----
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _AnalyticsHeaderDelegate(
+                            minExtent:
+                                screenHeight * 0.5.h, // stays until half screen
+                            maxExtent: screenHeight * 0.6.h, // fully expanded
+                            selectedType: selectedType,
+                            onTypeChanged: (type) {
+                              setState(() => selectedType = type);
+                            },
+                          ),
+                        ),
+                  
+                        /// ---- Recent Transaction Title ----
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 1.h,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Recent Transaction",
+                                  style: TextStyle(
+                                    fontSize: 25.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: color.primary,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: scrollToList,
+                                  child: Text(
+                                    "See All",
+                                    style: TextStyle(fontSize: 14.sp),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                  
+                        /// ---- Transaction List ----
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: screenHeight * 0.35,
+                            child: TransactionList(type: selectedType),
+                          ),
+                        ),
+                      ],
+                    ),
+                );
+          }
         ),
       ],
     );

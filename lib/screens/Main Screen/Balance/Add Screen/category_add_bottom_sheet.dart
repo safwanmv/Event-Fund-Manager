@@ -4,7 +4,7 @@ import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void showAddCategoryBottomSheet(BuildContext context) {
+void showAddCategoryBottomSheet(BuildContext context,String eventId) {
   CategoryDB.instance.refreshUI();
   final color = Theme.of(context).colorScheme;
   final categoryNameController = TextEditingController();
@@ -105,6 +105,8 @@ void showAddCategoryBottomSheet(BuildContext context) {
                         CategoryDB.instance.addCategoryToDB(
                           name,
                           selectedType!,
+                          eventId,
+
                         );
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(

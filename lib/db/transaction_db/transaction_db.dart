@@ -65,6 +65,7 @@ class TransactionDb implements TransactionDbFunctions {
     String name,double amount,
     CategoryType selectedCategory,
     DateTime selectedDateTime,
+    String eventId,
   ) async {
   
     
@@ -72,7 +73,7 @@ class TransactionDb implements TransactionDbFunctions {
       name: name,
       amount: amount,
       date: selectedDateTime,
-      type: selectedCategory,
+      type: selectedCategory, eventId: eventId,
     );
     await TransactionDb.instance.addTransaction(model);
   }

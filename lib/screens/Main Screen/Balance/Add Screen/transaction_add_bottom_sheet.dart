@@ -7,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class TransactionAddBottomSheet extends StatefulWidget {
-  const TransactionAddBottomSheet({super.key});
+  final String eventId;
+  const TransactionAddBottomSheet({super.key, required this.eventId});
 
   @override
   State<TransactionAddBottomSheet> createState() =>
@@ -38,7 +39,6 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-
     final color = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.only(
@@ -73,7 +73,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                         });
                       },
                     ),
-                    Text("Expense",style: TextStyle(fontSize: 16.sp),),
+                    Text("Expense", style: TextStyle(fontSize: 16.sp)),
                   ],
                 ),
                 Row(
@@ -90,16 +90,13 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                     ),
                   ],
                 ),
-                Text("income",style: TextStyle(fontSize: 16.sp),),
+                Text("income", style: TextStyle(fontSize: 16.sp)),
               ],
             ),
             SizedBox(height: 12.h),
             DropdownButtonFormField(
-              decoration: InputDecoration(
-               border: InputBorder.none,
-               
-              ),
-              hint: Text("Select Category",style: TextStyle(fontSize: 16.sp),),
+              decoration: InputDecoration(border: InputBorder.none),
+              hint: Text("Select Category", style: TextStyle(fontSize: 16.sp)),
               value: categoryId,
               items:
                   (selectedCategory == CategoryType.expense
@@ -158,12 +155,10 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
             TextButton.icon(
               onPressed: () async {
                 final selectDateTimeTemp = await showDatePicker(
-
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime.now().subtract(Duration(days: 365)),
                   lastDate: DateTime.now(),
-                
                 );
                 if (selectDateTimeTemp == null) {
                   return;
@@ -176,8 +171,9 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                 selectDateTime == null
                     ? "Select Date"
                     : formattedDate(selectDateTime!),
-                    
-              style: TextStyle(fontSize: 16.sp),),
+
+                style: TextStyle(fontSize: 16.sp),
+              ),
               icon: Icon(Icons.calendar_month),
             ),
             SizedBox(height: 13.h),
@@ -195,27 +191,34 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                   final name = nameController.text;
                   final amountText = amountController.text.trim();
                   final amount = double.tryParse(amountText);
+                  final eventId = widget.eventId;
                   TransactionDb.instance.addTransactionTODB(
                     name,
                     amount!,
                     selectedCategory!,
                     selectDateTime!,
+                    eventId,
                   );
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                     SnackBar(content: Text("Successfully Added",style: TextStyle(fontSize: 16.sp),)),
+                    SnackBar(
+                      content: Text(
+                        "Successfully Added",
+                        style: TextStyle(fontSize: 16.sp),
+                      ),
+                    ),
                   );
                 }
               },
-              child: Text("Submit",style: TextStyle(fontSize: 16.sp),),
-            
+              child: Text("Submit", style: TextStyle(fontSize: 16.sp)),
             ),
           ],
         ),
       ),
     );
   }
-  String formattedDate(DateTime date){
+
+  String formattedDate(DateTime date) {
     return DateFormat('dd MMM yyyy').format(date);
   }
 }

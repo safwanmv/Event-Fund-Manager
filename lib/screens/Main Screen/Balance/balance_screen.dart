@@ -7,8 +7,10 @@ import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/category_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/transaction_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
+import 'package:expense_tracker/widgets/Empty_data/empty_data_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -30,243 +32,301 @@ class _BalanceScreenState extends State<BalanceScreen> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     return SafeArea(
-      child: Column(
-        children: [
-          ValueListenableBuilder<List<EventModel>>(
-            valueListenable: EventDb.instance.eventListNotifer,
-            builder: (context, allEvents, _) {
-              final activeUser = UserDb.instance.activeUserNotifier.value;
-              if (activeUser == null) {
-                return Text("No user");
-              }
-              final userEvents = allEvents
-                  .where((i) => i.createdBy == activeUser.name)
-                  .toList();
-
-              return DropdownButton<EventModel>(
-                hint: Text(
-                  "Select Your Event",
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-                value: selectedEvent,
-                isExpanded: false,
-                underline: SizedBox(),
-                items: userEvents.map((event) {
-                  return DropdownMenuItem<EventModel>(
-                    value: event,
-                    child: Text(event.title, style: TextStyle(fontSize: 14.sp)),
-                  );
-                }).toList(),
-                onChanged: (event) {
-                  WidgetsBinding.instance.addPostFrameCallback((_){
-
-           
-                  setState(() {
-                    selectedEvent = event;
-                  });
-                },
-              );
-                     });
-            },
-          ),
-          Row(
-            children: [
-              Expanded(child: BalanceCard()),
-              Column(
-                children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) => TransactionAddBottomSheet(),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      padding: EdgeInsets.all(25.r),
+      child: ValueListenableBuilder(
+        valueListenable: EventDb.instance.eventListNotifer,
+        builder: (context, eventList, _) {
+          return eventList.isEmpty
+              ? Center(child: EmptyDataContainer())
+              : Column(
+                  children: [
+                    ValueListenableBuilder<List<EventModel>>(
+                      valueListenable: EventDb.instance.eventListNotifer,
+                      builder: (context, allEvents, _) {
+                        final activeUser =
+                            UserDb.instance.activeUserNotifier.value;
+                        if (activeUser == null) {
+                          return Text("No user");
+                        }
+                        final userEvents = allEvents
+                            .where((i) => i.createdBy == activeUser.name)
+                            .toList();
+                        if (userEvents.isNotEmpty && selectedEvent == null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              selectedEvent = userEvents.first;
+                            });
+                          });
+                        }
+                        if (userEvents.isEmpty) {
+                          return Center(
+                            child: Text(
+                              "You have not created any events yet.\nTap '+' to add a new event.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        }
+                        return DropdownButton<EventModel>(
+                          hint: Text(
+                            "Select Your Event",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                          value: selectedEvent,
+                          isExpanded: false,
+                          underline: SizedBox(),
+                          items: userEvents.map((event) {
+                            return DropdownMenuItem<EventModel>(
+                              value: event,
+                              child: Text(
+                                event.title,
+                                style: TextStyle(fontSize: 14.sp),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (event) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {
+                                selectedEvent = event;
+                              });
+                            });
+                          },
+                        );
+                      },
                     ),
-                    child: Icon(Icons.add, size: 24.r),
-                  ),
-                  SizedBox(height: 40.h),
-                  OutlinedButton(
-                    onPressed: () {
-                      showAddCategoryBottomSheet(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      padding: EdgeInsets.all(25.r),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: BalanceCard(selectedEvent: selectedEvent),
+                        ),
+                        Column(
+                          children: [
+                            OutlinedButton(
+                              onPressed: selectedEvent == null
+                                  ? null
+                                  : () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (context) =>
+                                            TransactionAddBottomSheet(
+                                              eventId: selectedEvent!.id,
+                                            ),
+                                      );
+                                    },
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                padding: EdgeInsets.all(25.r),
+                              ),
+                              child: Icon(Icons.add, size: 24.r),
+                            ),
+                            SizedBox(height: 40.h),
+                            OutlinedButton(
+                              onPressed: selectedEvent == null
+                                  ? null
+                                  : () {
+                                      showAddCategoryBottomSheet(
+                                        context,
+                                        selectedEvent!.id,
+                                      );
+                                    },
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                padding: EdgeInsets.all(25.r),
+                              ),
+                              child: Icon(Icons.category, size: 24.r),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    child: Icon(Icons.category, size: 24.r),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Transactions", style: TextStyle(fontSize: 16.sp)),
-              Text(
-                "Amount",
-                style: TextStyle(color: color.primary, fontSize: 14.sp),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Expanded(child: TransactionList()),
-        ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Transactions", style: TextStyle(fontSize: 16.sp)),
+                        Text(
+                          "Amount",
+                          style: TextStyle(
+                            color: color.primary,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Expanded(
+                      child: selectedEvent == null
+                          ? Center(
+                              child: Text(
+                                "Please select an event to view transactions",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          : TransactionList(eventId: selectedEvent!.id),
+                    ),
+                  ],
+                );
+        },
       ),
     );
   }
 }
 
 class BalanceCard extends StatelessWidget {
-  const BalanceCard({super.key});
+  final EventModel? selectedEvent;
+  const BalanceCard({super.key, required this.selectedEvent});
 
   @override
   Widget build(BuildContext context) {
+    if (selectedEvent == null) {
+      return Center(
+        child: Text(
+          "Please select an event to view balance",
+          style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+        ),
+      );
+    }
     final color = Theme.of(context).colorScheme;
 
     return ValueListenableBuilder(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (BuildContext ctx, List<TransactionsModel> newList, Widget? _) {
-        double totalIncome = newList
+        List<TransactionsModel> filteredList = selectedEvent == null
+            ? newList
+            : newList.where((i) => i.eventId == selectedEvent!.id).toList();
+        double totalIncome = filteredList
             .where((i) => i.type == CategoryType.income)
             .fold(
               0.0,
               (previousValue, element) => previousValue + element.amount,
             );
 
-        double totalExpense = newList
+        double totalExpense = filteredList
             .where((i) => i.type == CategoryType.expense)
             .fold(
               0.0,
               (previousValue, element) => previousValue + element.amount,
             );
         double balance = totalIncome - totalExpense;
-        return ValueListenableBuilder(
-          valueListenable: UserDb.instance.activeUserNotifier,
-          builder: (context, activeUser, _) {
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-              child: SafeArea(
-                child: Column(
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(29.r),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: double
-                                      .infinity, // Fills the Card horizontally
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF89CFF0),
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(29.r),
+                    Expanded(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(29.r),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double
+                                  .infinity, // Fills the Card horizontally
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF89CFF0),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(29.r),
+                                ),
+                              ),
+                              constraints: BoxConstraints(minHeight: 100.h),
+                              padding: EdgeInsets.all(16.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    selectedEvent!.title,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
-                                  constraints: BoxConstraints(minHeight: 100.h),
-                                  padding: EdgeInsets.all(16.r),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        activeUser?.name ?? "Loading..",
+                                        selectedEvent!.description,
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 14.sp,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            maskCardNumber("102034324"),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16.sp,
-                                            ),
-                                          ),
-                                          Text(
-                                            "11/25",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(16.r), // Add padding
-
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Balance",
-                                        style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 16.sp,
                                         ),
                                       ),
                                       Text(
-                                        "₹$balance",
+                                        formattedDate(selectedEvent!.date),
                                         style: TextStyle(
-                                          fontSize: 40.sp,
-                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Total week Expense      23.3%",
-                                            style: TextStyle(
-                                              color: color.primary,
-                                              fontSize: 16.sp,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                            Container(
+                              padding: EdgeInsets.all(16.r), // Add padding
+
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Balance",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+                                  Text(
+                                    "₹$balance",
+                                    style: TextStyle(
+                                      fontSize: 40.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Targeted Amount: ${selectedEvent!.targetedAmount.toString()}",
+                                        style: TextStyle(
+                                          color: color.primary,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            );
-          },
+              ],
+            ),
+          ),
         );
       },
     );
   }
 }
 
-String maskCardNumber(String number) {
-  String lastFour = number.substring(number.length - 4);
-  return "**** $lastFour";
+String formattedDate(DateTime date) {
+  return DateFormat('dd MMM yyyy').format(date);
 }

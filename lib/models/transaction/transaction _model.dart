@@ -15,6 +15,8 @@ class TransactionsModel {
   final DateTime date;
   @HiveField(4)
   final CategoryType type;
+  @HiveField(5)
+  final String eventId;
 
   TransactionsModel({
     String? id,
@@ -22,5 +24,6 @@ class TransactionsModel {
     required this.amount,
     required this.date,
     required this.type, 
+    required this.eventId,
   }) : id = id ?? const Uuid().v4();
 }

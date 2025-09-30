@@ -20,11 +20,14 @@ class CategoryModel {
   final bool isDeleted;
   @HiveField(3)
   final CategoryType type;
+  @HiveField(4)
+  final String eventId;
 
   CategoryModel({
     String? id,
     required this.name,
     required this.type,
     this.isDeleted = false,
+    required this.eventId,
   }) : id = id ?? const Uuid().v4();
 }

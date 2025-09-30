@@ -73,8 +73,9 @@ class CategoryDB implements CategoryDbFunctions {
   Future<void> addCategoryToDB(
     String name,
     CategoryType selectedCategory,
+    String eventId,
   ) async {
-    final model = CategoryModel(name: name, type: selectedCategory);
+    final model = CategoryModel(name: name, type: selectedCategory, eventId: eventId);
     await CategoryDB.instance.insertCategory(model);
   }
 }

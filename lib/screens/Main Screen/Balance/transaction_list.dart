@@ -8,16 +8,21 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final CategoryType? type;
-  const TransactionList({super.key, this.type});
+  final String? eventId;
+  const TransactionList({super.key, this.type,this.eventId});
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<TransactionsModel>>(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (BuildContext ctx, List<TransactionsModel> newList, Widget? _) {
-        final filteredList = type == null
-            ? newList
-            : newList.where((i) => i.type == type).toList();
+        var filteredList = newList;
+        if(type !=null){
+          filteredList=filteredList.where((i)=>i.type==type).toList();
+        }
+        if(eventId !=null){
+          filteredList=filteredList.where((i)=>i.eventId==eventId).toList();
+        }
 
         if (filteredList.isEmpty) {
           return Center(

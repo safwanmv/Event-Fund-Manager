@@ -22,11 +22,7 @@ class HomescreenTopBanner extends StatelessWidget {
         final incomes = newList
             .where((i) => i.type == CategoryType.income)
             .toList();
-        if (incomes.isEmpty) {
-          return Center(
-            child: Text("No Data", style: TextStyle(fontSize: 16.sp)),
-          );
-        }
+       
         incomes.sort((a, b) => b.amount.compareTo(a.amount));
         final topIncomes = incomes.take(4).toList();
 
