@@ -23,7 +23,7 @@ class BarChartScreen extends StatelessWidget {
               .toList();
           if (incomes.isEmpty) {
             return Center(
-              child: Text("No income data", style: TextStyle(fontSize: 16.sp)),
+              child: Text("No Transaction data", style: TextStyle(fontSize: 16.sp)),
             );
           }
           incomes.sort((a, b) => b.amount.compareTo(a.amount));
