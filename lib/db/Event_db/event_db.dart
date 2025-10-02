@@ -32,6 +32,8 @@ class EventDb extends EventDbFunctions {
 
   ValueNotifier<List<EventModel>> eventListNotifer = ValueNotifier([]);
   ValueNotifier<List<EventModel>> filteredEventsNotifer = ValueNotifier([]);
+  //used for get the value of selected event to use across all the screen
+  ValueNotifier<EventModel?> selectedEventNotifer = ValueNotifier(null);
   late final Box<EventModel> _eventBox;
 
   @override
@@ -108,5 +110,9 @@ class EventDb extends EventDbFunctions {
 
   List<EventModel> getEventByUser(String userName) {
     return _eventBox.values.where((i) => i.createdBy == userName).toList();
+  }
+
+  void selectedEvent(EventModel? event) {
+    selectedEventNotifer.value = event;
   }
 }

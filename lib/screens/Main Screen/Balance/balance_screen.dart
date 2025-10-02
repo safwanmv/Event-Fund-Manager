@@ -1,3 +1,4 @@
+import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
@@ -7,7 +8,7 @@ import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/category_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/transaction_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
-import 'package:expense_tracker/widgets/Empty_data/empty_data_container.dart';
+import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,6 @@ class BalanceScreen extends StatefulWidget {
 }
 
 class _BalanceScreenState extends State<BalanceScreen> {
-  EventModel? selectedEvent;
   @override
   void initState() {
     super.initState();
@@ -34,9 +34,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
     return SafeArea(
       child: ValueListenableBuilder(
         valueListenable: EventDb.instance.eventListNotifer,
-        builder: (context, eventList, _) {
-          return eventList.isEmpty
-              ? Center(child: EmptyDataContainer())
+        builder: (context, eventlist, _) {
+          return eventlist.isEmpty
+              ? Center(child: EmptyDataContainer(text: TextMessages.noEvents))
               : Column(
                   children: [
                     ValueListenableBuilder<List<EventModel>>(
@@ -50,13 +50,6 @@ class _BalanceScreenState extends State<BalanceScreen> {
                         final userEvents = allEvents
                             .where((i) => i.createdBy == activeUser.name)
                             .toList();
-                        if (userEvents.isNotEmpty && selectedEvent == null) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            setState(() {
-                              selectedEvent = userEvents.first;
-                            });
-                          });
-                        }
                         if (userEvents.isEmpty) {
                           return Center(
                             child: Text(
@@ -69,82 +62,96 @@ class _BalanceScreenState extends State<BalanceScreen> {
                             ),
                           );
                         }
-                        return DropdownButton<EventModel>(
-                          hint: Text(
-                            "Select Your Event",
-                            style: TextStyle(fontSize: 14.sp),
-                          ),
-                          value: selectedEvent,
-                          isExpanded: false,
-                          underline: SizedBox(),
-                          items: userEvents.map((event) {
-                            return DropdownMenuItem<EventModel>(
-                              value: event,
-                              child: Text(
-                                event.title,
+                        if (EventDb.instance.selectedEventNotifer.value ==
+                            null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            EventDb.instance.selectedEvent(userEvents.first);
+                          });
+                        }
+
+                        return ValueListenableBuilder(
+                          valueListenable:
+                              EventDb.instance.selectedEventNotifer,
+                          builder: (context, selectedEvent, _) {
+                            return DropdownButton<EventModel>(
+                              hint: Text(
+                                "Select Your Event",
                                 style: TextStyle(fontSize: 14.sp),
                               ),
+                              value: selectedEvent,
+                              isExpanded: false,
+                              underline: SizedBox(),
+                              items: userEvents.map((event) {
+                                return DropdownMenuItem<EventModel>(
+                                  value: event,
+                                  child: Text(
+                                    event.title,
+                                    style: TextStyle(fontSize: 14.sp),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (event) {
+                                EventDb.instance.selectedEvent(event);
+                              },
                             );
-                          }).toList(),
-                          onChanged: (event) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              setState(() {
-                                selectedEvent = event;
-                              });
-                            });
                           },
                         );
                       },
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: BalanceCard(selectedEvent: selectedEvent),
-                        ),
-                        Column(
+                    ValueListenableBuilder(
+                      valueListenable: EventDb.instance.selectedEventNotifer,
+                      builder: (context, selectedEvent, child) {
+                        return Row(
                           children: [
-                            OutlinedButton(
-                              onPressed: selectedEvent == null
-                                  ? null
-                                  : () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        builder: (context) =>
-                                            TransactionAddBottomSheet(
-                                              eventId: selectedEvent!.id,
-                                            ),
-                                      );
-                                    },
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                padding: EdgeInsets.all(25.r),
-                              ),
-                              child: Icon(Icons.add, size: 24.r),
+                            Expanded(
+                              child: BalanceCard(selectedEvent: selectedEvent),
                             ),
-                            SizedBox(height: 40.h),
-                            OutlinedButton(
-                              onPressed: selectedEvent == null
-                                  ? null
-                                  : () {
-                                      showAddCategoryBottomSheet(
-                                        context,
-                                        selectedEvent!.id,
-                                      );
-                                    },
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.r),
+                            Column(
+                              children: [
+                                OutlinedButton(
+                                  onPressed: selectedEvent == null
+                                      ? null
+                                      : () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) =>
+                                                TransactionAddBottomSheet(
+                                                  eventId: selectedEvent.id,
+                                                ),
+                                          );
+                                        },
+                                  style: OutlinedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    padding: EdgeInsets.all(25.r),
+                                  ),
+                                  child: Icon(Icons.add, size: 24.r),
                                 ),
-                                padding: EdgeInsets.all(25.r),
-                              ),
-                              child: Icon(Icons.category, size: 24.r),
+                                SizedBox(height: 40.h),
+                                OutlinedButton(
+                                  onPressed: selectedEvent == null
+                                      ? null
+                                      : () {
+                                          showAddCategoryBottomSheet(
+                                            context,
+                                            selectedEvent.id,
+                                          );
+                                        },
+                                  style: OutlinedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    padding: EdgeInsets.all(25.r),
+                                  ),
+                                  child: Icon(Icons.category, size: 24.r),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
                     SizedBox(height: 20.h),
 
@@ -163,8 +170,11 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                     SizedBox(height: 10.h),
                     Expanded(
-                      child: selectedEvent == null
-                          ? Center(
+                      child: ValueListenableBuilder(
+                        valueListenable: EventDb.instance.selectedEventNotifer,
+                        builder: (context, selectedEvent, child) {
+                          if (selectedEvent == null) {
+                            return Center(
                               child: Text(
                                 "Please select an event to view transactions",
                                 style: TextStyle(
@@ -172,8 +182,13 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                   color: Colors.grey,
                                 ),
                               ),
-                            )
-                          : TransactionList(eventId: selectedEvent!.id),
+                            );
+                          } else {
+                            return TransactionList(eventId: selectedEvent.id);
+                          }
+                        },
+                      ),
+                      // :
                     ),
                   ],
                 );
