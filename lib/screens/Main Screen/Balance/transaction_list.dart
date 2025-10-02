@@ -1,6 +1,8 @@
+import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
+import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -25,12 +27,7 @@ class TransactionList extends StatelessWidget {
         }
 
         if (filteredList.isEmpty) {
-          return Center(
-            child: Text(
-              "No Transactions Found",
-              style: TextStyle(fontSize: 16.sp),
-            ),
-          );
+          return EmptyDataContainer(text: TextMessages.noTransaction);
         }
 
         return ListView.separated(

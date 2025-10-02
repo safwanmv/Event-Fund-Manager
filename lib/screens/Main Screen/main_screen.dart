@@ -21,32 +21,32 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    return SafeArea(
-      bottom: false,
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(top: 8.0,left: 8,right: 8,),
-          child: Container(
-            decoration: BoxDecoration(
-              color: color.surface,
-          
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40.r),
-                bottomRight: Radius.circular(40.r),
-              ),
-            ),
-          
-            child: ValueListenableBuilder(
-              valueListenable: selectedIndexNotifer,
-              builder: (BuildContext ctx, int updatedIndex, _) {
-                return IndexedStack(index: updatedIndex, children: _pages);
-              },
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: color.surface,
+
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(40.r),
+              bottomRight: Radius.circular(40.r),
             ),
           ),
-        ),
 
-        bottomNavigationBar: const BottomNaviagtion(),
+          child: ValueListenableBuilder(
+            valueListenable: selectedIndexNotifer,
+            builder: (BuildContext ctx, int updatedIndex, _) {
+              return IndexedStack(index: updatedIndex, children: _pages);
+            },
+          ),
+        ),
       ),
+
+      bottomNavigationBar: const BottomNaviagtion(),
     );
   }
 }
+
+
+//analythics screen drop down and new screen when we tap the event from the event list and go to that page and we can add money and see other detials

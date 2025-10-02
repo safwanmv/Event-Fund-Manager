@@ -36,8 +36,13 @@ class _BalanceScreenState extends State<BalanceScreen> {
         valueListenable: EventDb.instance.eventListNotifer,
         builder: (context, eventlist, _) {
           return eventlist.isEmpty
-              ? Center(child: EmptyDataContainer(text: TextMessages.noEvents))
+              ? Column(
+                children: [
+                  Center(child: EmptyDataContainer(text: TextMessages.noEvents)),
+                ],
+              )
               : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ValueListenableBuilder<List<EventModel>>(
                       valueListenable: EventDb.instance.eventListNotifer,
@@ -50,17 +55,17 @@ class _BalanceScreenState extends State<BalanceScreen> {
                         final userEvents = allEvents
                             .where((i) => i.createdBy == activeUser.name)
                             .toList();
-                        if (userEvents.isEmpty) {
-                          return Center(
-                            child: Text(
-                              "You have not created any events yet.\nTap '+' to add a new event.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          );
+                        final currentSelected =
+                            EventDb.instance.selectedEventNotifer.value;
+                        if (currentSelected != null &&
+                            !userEvents.contains(currentSelected)) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (userEvents.isNotEmpty) {
+                              EventDb.instance.selectedEvent(userEvents.first);
+                            } else {
+                              EventDb.instance.selectedEvent(null);
+                            }
+                          });
                         }
                         if (EventDb.instance.selectedEventNotifer.value ==
                             null) {
@@ -73,12 +78,16 @@ class _BalanceScreenState extends State<BalanceScreen> {
                           valueListenable:
                               EventDb.instance.selectedEventNotifer,
                           builder: (context, selectedEvent, _) {
+                            final safeSelectedEvent =
+                                userEvents.contains(selectedEvent)
+                                ? selectedEvent
+                                : null;
                             return DropdownButton<EventModel>(
                               hint: Text(
                                 "Select Your Event",
                                 style: TextStyle(fontSize: 14.sp),
                               ),
-                              value: selectedEvent,
+                              value: safeSelectedEvent,
                               isExpanded: false,
                               underline: SizedBox(),
                               items: userEvents.map((event) {
@@ -135,8 +144,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                       ? null
                                       : () {
                                           showAddCategoryBottomSheet(
-                                            context,
-                                            selectedEvent.id,
+                                            context: context,
+                                            eventId: selectedEvent.id,
                                           );
                                         },
                                   style: OutlinedButton.styleFrom(
@@ -274,11 +283,15 @@ class BalanceCard extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        selectedEvent!.description,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16.sp,
+                                      Expanded(
+                                        child: Text(
+                                          selectedEvent!.description,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16.sp,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Text(

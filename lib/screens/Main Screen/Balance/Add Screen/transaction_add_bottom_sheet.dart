@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Category_db/category_db.dart';
@@ -94,33 +96,42 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
               ],
             ),
             SizedBox(height: 12.h),
-            DropdownButtonFormField(
-              decoration: InputDecoration(border: InputBorder.none),
-              hint: Text("Select Category", style: TextStyle(fontSize: 16.sp)),
-              value: categoryId,
-              items:
-                  (selectedCategory == CategoryType.expense
-                          ? CategoryDB.instance.expenseCategoryListListner.value
-                          : CategoryDB.instance.incomeCategoryListListner.value)
-                      .map((e) {
-                        return DropdownMenuItem<String>(
-                          value: e.id,
-                          child: Text(e.name),
-                          onTap: () => selectedCategoryModel = e,
-                        );
-                      })
-                      .toList(),
+            ValueListenableBuilder(
+              valueListenable: selectedCategory == CategoryType.expense
+                  ? CategoryDB.instance.expenseCategoryListListner
+                  : CategoryDB.instance.incomeCategoryListListner,
+              builder: (context, categoryList, _) {
+                final eventCategories = categoryList
+                    .where((i) => i.eventId == widget.eventId)
+                    .toList();
 
-              onChanged: (selectedValue) {
-                setState(() {
-                  categoryId = selectedValue;
-                });
-              },
-              validator: (value) {
-                if (value == null) {
-                  return "Category is required";
-                }
-                return null;
+                return DropdownButtonFormField(
+                  decoration: InputDecoration(border: InputBorder.none),
+                  hint: Text(
+                    "Select Category",
+                    style: TextStyle(fontSize: 16.sp),
+                  ),
+                  value: categoryId,
+                  items: eventCategories.map((e) {
+                    return DropdownMenuItem<String>(
+                      value: e.id,
+                      child: Text(e.name),
+                      onTap: () => selectedCategoryModel = e,
+                    );
+                  }).toList(),
+
+                  onChanged: (selectedValue) {
+                    setState(() {
+                      categoryId = selectedValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return "Category is required";
+                    }
+                    return null;
+                  },
+                );
               },
             ),
             SizedBox(height: 12.h),

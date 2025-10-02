@@ -1,15 +1,19 @@
+
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
 import 'package:expense_tracker/db/Category_db/category_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void showAddCategoryBottomSheet(BuildContext context,String eventId) {
+void showAddCategoryBottomSheet({
+  required BuildContext context,
+  required String eventId,
+}) {
   CategoryDB.instance.refreshUI();
   final color = Theme.of(context).colorScheme;
   final categoryNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  CategoryType? selectedCategory=CategoryType.expense;
+  CategoryType? selectedCategory = CategoryType.expense;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -22,9 +26,7 @@ void showAddCategoryBottomSheet(BuildContext context,String eventId) {
               right: 26.w,
               left: 26.w,
               top: 16.h,
-              bottom:
-                  MediaQuery.of(context).viewInsets.bottom +
-                  56.h, 
+              bottom: MediaQuery.of(context).viewInsets.bottom + 56.h,
             ),
             child: Form(
               key: formKey,
@@ -106,15 +108,19 @@ void showAddCategoryBottomSheet(BuildContext context,String eventId) {
                           name,
                           selectedType!,
                           eventId,
-
                         );
-                        Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(content: Text("Successfully Added",style: TextStyle(fontSize: 16.sp),)),
+                          SnackBar(
+                            content: Text(
+                              "Successfully Added",
+                              style: TextStyle(fontSize: 16.sp),
+                            ),
+                          ),
                         );
                       }
                     },
-                    child: Text("Add",style: TextStyle(fontSize: 16.sp),),
+                    child: Text("Add", style: TextStyle(fontSize: 16.sp)),
                   ),
                 ],
               ),

@@ -62,7 +62,6 @@ class CategoryDB implements CategoryDbFunctions {
     await _categoryBox.put(obj.id, obj);
     await refreshUI();
   }
-  
 
   @override
   Future<void> deleteCategory(String id) async {
@@ -75,7 +74,12 @@ class CategoryDB implements CategoryDbFunctions {
     CategoryType selectedCategory,
     String eventId,
   ) async {
-    final model = CategoryModel(name: name, type: selectedCategory, eventId: eventId);
+    final model = CategoryModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name,
+      type: selectedCategory,
+      eventId: eventId,
+    );
     await CategoryDB.instance.insertCategory(model);
   }
 }

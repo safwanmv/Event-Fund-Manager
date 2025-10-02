@@ -1,4 +1,6 @@
+import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
+import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -13,7 +15,11 @@ class EventsList extends StatelessWidget {
       valueListenable: EventDb.instance.eventListNotifer,
       builder: (context, eventList, _) {
         if (eventList.isEmpty) {
-          return Center(child: Text("The list is empty"));
+          return SafeArea(child: Column(
+            children: [
+              EmptyDataContainer(text: TextMessages.noEvents,),
+            ],
+          ));
         }
         return ListView.separated(
           itemBuilder: (context, index) {
