@@ -1,4 +1,5 @@
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -8,8 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PieChartScreen extends StatefulWidget {
   final CategoryType? selectedType;
+  final EventModel? selectedEvent;
 
-  const PieChartScreen({super.key, this.selectedType});
+  const PieChartScreen({super.key, this.selectedType, this.selectedEvent});
 
   @override
   State<PieChartScreen> createState() => _PieChartScreenState();
@@ -36,7 +38,8 @@ class _PieChartScreenState extends State<PieChartScreen> {
         ValueListenableBuilder<List<TransactionsModel>>(
           valueListenable: TransactionDb.instance.transactionListNotifer,
           builder: (context, newList, child) {
-            final categoryTotals = calculateCategoryTotals(newList);
+            final filteredList=widget.selectedEvent==null?newList:newList.where((i)=>i.eventId==widget.selectedEvent!.id).toList();
+            final categoryTotals = calculateCategoryTotals(filteredList);
             final titles = categoryTotals.keys.toList();
             final List<double> values = categoryTotals.values.toList();
             if (values.isEmpty) {
@@ -89,11 +92,14 @@ class _PieChartScreenState extends State<PieChartScreen> {
                         bool isSelected = index == isSelectedIndex;
 
                         return PieChartSectionData(
-                          title: titles[index],
+                          title: titles[index].length > 7
+                              ?"${ titles[index].substring(0, 5)} ..."
+                              : titles[index],
                           titleStyle: TextStyle(
                             color: color.onSurface,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           color: getColorForIndex(index),
                           value: values[index],
