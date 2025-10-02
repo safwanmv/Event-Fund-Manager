@@ -23,12 +23,14 @@ class BarChartScreen extends StatelessWidget {
               .toList();
           if (incomes.isEmpty) {
             return Center(
-              child: Text("No Transaction data", style: TextStyle(fontSize: 16.sp)),
+              child: Text(
+                "No Transaction data",
+                style: TextStyle(fontSize: 16.sp),
+              ),
             );
           }
           incomes.sort((a, b) => b.amount.compareTo(a.amount));
           final topIncomes = incomes.take(4).toList();
-
 
           final double highest = topIncomes
               .map((i) => i.amount)
@@ -83,7 +85,9 @@ class BarChartScreen extends StatelessWidget {
                       if (value > maxY)
                         return const SizedBox(); // hide anything above maxY
                       return Text(
-                        (value>=1000)? "${(value / 1000).toInt()}k":value.toString(),
+                        (value >= 1000)
+                            ? "${(value / 1000).toInt()}k"
+                            : value.toString(),
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Colors.grey[700],
@@ -102,7 +106,9 @@ class BarChartScreen extends StatelessWidget {
                         return const SizedBox();
                       }
                       return Text(
-                        topIncomes[i].name,
+                        topIncomes[i].name.length > 8
+                            ? '${topIncomes[i].name.substring(0, 8)}...'
+                            : topIncomes[i].name,
                         style: TextStyle(
                           color: color.primary,
                           fontSize: 16.sp,
