@@ -67,7 +67,7 @@ class UserDb implements UserDbFunctions {
   @override
   Future<void> updateUser(UserModel user) async {
     await _userBox.put(user.id, user);
-    await refreshUI(); 
+    await refreshUI();
   }
 
   Future<bool> addDataToDB({
@@ -102,16 +102,23 @@ class UserDb implements UserDbFunctions {
     await sessionBox.delete('active_user_email');
   }
 
-  Future<void>loadActiveUser()async{
-    final sessionBox=await Hive.openBox<String>(SESSION_DB_NAME);
-    final email=sessionBox.get('active_user_email');
-    if(email !=null){
-      final user=getUserByEmail(email);
-      if(user!= null){
-        activeUserNotifier.value=user;
+  Future<void> loadActiveUser() async {
+    final sessionBox = await Hive.openBox<String>(SESSION_DB_NAME);
+    final email = sessionBox.get('active_user_email');
+    if (email != null) {
+      final user = getUserByEmail(email);
+      if (user != null) {
+        activeUserNotifier.value = user;
         print("Loaded active User: ${user.email}");
       }
     }
   }
 
+  UserModel? getUserById(String id) {
+    try {
+      return _userBox.values.firstWhere((i) => i.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 }

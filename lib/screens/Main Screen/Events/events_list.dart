@@ -1,5 +1,6 @@
 import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
+import 'package:expense_tracker/screens/Main%20Screen/Events/Event%20Details/event_page_details.dart';
 import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,26 +43,29 @@ class EventsList extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(23.r),
-                  ),
-                  child: ListTile(
-                    textColor: color.primary,
-                    title: Center(
-                      child: Text(
-                        value.title,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EventPageDetails(selectedEvent: value,))),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(23.r),
+                    ),
+                    child: ListTile(
+                      textColor: color.primary,
+                      title: Center(
+                        child: Text(
+                          value.title,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
+                      subtitle: Text(value.joinCode),
+                      trailing: Text(value.participants.length.toString()),
+                  
                     ),
-                    subtitle: Text(value.joinCode),
-                    trailing: Text(value.participants.length.toString()),
-
                   ),
                 ),
               ),

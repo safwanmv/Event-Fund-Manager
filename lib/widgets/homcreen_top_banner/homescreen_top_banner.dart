@@ -22,7 +22,7 @@ class HomescreenTopBanner extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (context, newList, _) {
-        final filteredList=newList.where((i)=>i.eventId==selectedEvent!.id).toList();
+        final filteredList=selectedEvent==null?newList: newList.where((i)=>i.eventId==selectedEvent!.id).toList();
         final incomes = filteredList
             .where((i) => i.type == CategoryType.income)
             .toList();
