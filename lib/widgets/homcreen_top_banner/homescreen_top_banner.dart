@@ -1,4 +1,5 @@
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/theme/colors/color.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:intl/intl.dart';
 
 class HomescreenTopBanner extends StatelessWidget {
   final Color? color;
-  const HomescreenTopBanner({super.key, this.color});
+  final EventModel? selectedEvent;
+
+  const HomescreenTopBanner({super.key, this.color, this.selectedEvent, });
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +22,29 @@ class HomescreenTopBanner extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (context, newList, _) {
-        final incomes = newList
+        final filteredList=newList.where((i)=>i.eventId==selectedEvent!.id).toList();
+        final incomes = filteredList
             .where((i) => i.type == CategoryType.income)
             .toList();
-       
+    
         incomes.sort((a, b) => b.amount.compareTo(a.amount));
         final topIncomes = incomes.take(4).toList();
-
+    
         return SizedBox(
           height: 230.h,
           child: GridView.builder(
             controller: scrollController,
             scrollDirection: Axis.horizontal,
-
+    
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
               mainAxisExtent: 330.w,
             ),
             itemBuilder: (context, index) {
               final value = topIncomes[index];
-              final formattedDate = DateFormat('dd-MM-yyyy').format(value.date);
+              final formattedDate = DateFormat(
+                'dd-MM-yyyy',
+              ).format(value.date);
               return Container(
                 margin: EdgeInsets.all(10.r),
                 decoration: BoxDecoration(

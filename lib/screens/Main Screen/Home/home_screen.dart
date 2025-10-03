@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? selectedValue;
+
   // List<EventModel>allEvents=[];
   @override
   void initState() {
@@ -173,7 +173,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 : SizedBox(height: 10.h),
 
-            HomescreenTopBanner(),
+            ValueListenableBuilder(
+              valueListenable: EventDb.instance.selectedEventNotifer,
+              builder: (context, selectedEvent, child) {
+                return HomescreenTopBanner(selectedEvent: selectedEvent,);
+              }
+            ),
 
             ValueListenableBuilder(
               valueListenable: EventDb.instance.eventListNotifer,

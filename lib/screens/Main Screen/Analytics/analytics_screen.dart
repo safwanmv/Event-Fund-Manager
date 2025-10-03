@@ -33,7 +33,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(selectedType);
     final color = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
