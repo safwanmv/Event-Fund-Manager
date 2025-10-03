@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 class TransactionList extends StatelessWidget {
   final CategoryType? type;
   final String? eventId;
-  const TransactionList({super.key, this.type,this.eventId});
+  const TransactionList({super.key, this.type, this.eventId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +19,15 @@ class TransactionList extends StatelessWidget {
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (BuildContext ctx, List<TransactionsModel> newList, Widget? _) {
         var filteredList = newList;
-        if(type !=null){
-          filteredList=filteredList.where((i)=>i.type==type).toList();
+
+        if (type != null) {
+          filteredList = filteredList.where((i) => i.type == type).toList();
         }
-        if(eventId !=null){
-          filteredList=filteredList.where((i)=>i.eventId==eventId).toList();
+
+        if (eventId != null) {
+          filteredList = filteredList
+              .where((i) => i.eventId.trim() == eventId!.trim())
+              .toList();
         }
 
         if (filteredList.isEmpty) {
@@ -73,9 +77,7 @@ class TransactionTile extends StatelessWidget {
         ),
         child: ListTile(
           title: Text(value.name, style: TextStyle(fontSize: 16.sp)),
-          leading: CircleAvatar(
-            child: Text(value.name[0].toUpperCase()),
-          ),
+          leading: CircleAvatar(child: Text(value.name[0].toUpperCase())),
           subtitle: Text(
             DateFormat('dd MMM yyyy').format(value.date),
             style: TextStyle(color: color.primary, fontSize: 16.sp),

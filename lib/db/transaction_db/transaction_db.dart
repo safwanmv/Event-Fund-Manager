@@ -17,6 +17,7 @@ abstract class TransactionDbFunctions {
   Future<void> refreshUI();
 }
 
+
 class TransactionDb implements TransactionDbFunctions {
   ValueNotifier<List<TransactionsModel>> transactionListNotifer = ValueNotifier(
     [],
@@ -73,9 +74,14 @@ class TransactionDb implements TransactionDbFunctions {
       name: name,
       amount: amount,
       date: selectedDateTime,
-      type: selectedCategory, eventId: eventId,
+      type: selectedCategory, 
+      eventId: eventId,
     );
+    print("Adding transaction with eventId: '$eventId'");
+
     await TransactionDb.instance.addTransaction(model);
   }
+  
+
   
 }

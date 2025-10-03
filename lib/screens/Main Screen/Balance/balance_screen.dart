@@ -26,6 +26,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
     super.initState();
     TransactionDb.instance.refreshUI();
     EventDb.instance.refreshUI();
+    
   }
 
   @override
@@ -193,7 +194,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                               ),
                             );
                           } else {
-                            return TransactionList(eventId: selectedEvent.id);
+                            return TransactionList(eventId: selectedEvent.id,);
                           }
                         },
                       ),

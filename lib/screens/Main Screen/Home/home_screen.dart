@@ -181,43 +181,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 return eventList.isEmpty
                     ? EmptyDataContainer(text: TextMessages.noEvents)
                     : ValueListenableBuilder(
-                        valueListenable:
-                            TransactionDb.instance.transactionListNotifer,
-
-                        builder: (context, transactionList, _) {
-                          return transactionList.isEmpty
-                              ? EmptyDataContainer(
-                                  text: TextMessages.noTransaction,
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(left: 22.w),
-
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // SizedBox(height: 20.h),
-                                      // Text(
-                                      //   "User in The Last Week,",
-                                      //   style: TextStyle(
-                                      //     fontWeight: FontWeight.bold,
-                                      //     fontSize: 16.sp,
-                                      //   ),
-                                      // ),
-                                      // Text(
-                                      //   "+2.1%",
-                                      //   style: TextStyle(
-                                      //     fontSize: 40.h,
-                                      //     fontWeight: FontWeight.w900,
-                                      //   ),
-                                      // ),
-                                      SizedBox(height: 50.h),
-                                      BarChartScreen(),
-                                    ],
-                                  ),
-                                );
-                        },
-                      );
+                      valueListenable: EventDb.instance.selectedEventNotifer,
+                      builder: (context, selectedEvent, _) {
+                        return ValueListenableBuilder(
+                            valueListenable:
+                                TransactionDb.instance.transactionListNotifer,
+                        
+                            builder: (context, transactionList, _) {
+                              return transactionList.isEmpty
+                                  ? EmptyDataContainer(
+                                      text: TextMessages.noTransaction,
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.only(left: 22.w),
+                        
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // SizedBox(height: 20.h),
+                                          // Text(
+                                          //   "User in The Last Week,",
+                                          //   style: TextStyle(
+                                          //     fontWeight: FontWeight.bold,
+                                          //     fontSize: 16.sp,
+                                          //   ),
+                                          // ),
+                                          // Text(
+                                          //   "+2.1%",
+                                          //   style: TextStyle(
+                                          //     fontSize: 40.h,
+                                          //     fontWeight: FontWeight.w900,
+                                          //   ),
+                                          // ),
+                                          SizedBox(height: 50.h),
+                                          BarChartScreen(selectedEvent: selectedEvent,),
+                                        ],
+                                      ),
+                                    );
+                            },
+                          );
+                      }
+                    );
               },
             ),
           ],

@@ -23,14 +23,16 @@ class EventModelAdapter extends TypeAdapter<EventModel> {
       date: fields[4] as DateTime,
       createdBy: fields[5] as String,
       targetedAmount: fields[3] as double,
+      collectedAmount: fields[8] as double?,
       participants: (fields[6] as List?)?.cast<String>(),
+      joinCode: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EventModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class EventModelAdapter extends TypeAdapter<EventModel> {
       ..writeByte(5)
       ..write(obj.createdBy)
       ..writeByte(6)
-      ..write(obj.participants);
+      ..write(obj.participants)
+      ..writeByte(7)
+      ..write(obj.joinCode)
+      ..writeByte(8)
+      ..write(obj.collectedAmount);
   }
 
   @override

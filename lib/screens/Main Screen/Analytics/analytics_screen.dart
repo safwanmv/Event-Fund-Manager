@@ -33,6 +33,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(selectedType);
     final color = Theme.of(context).colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -102,7 +103,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       );
                     },
                   ),
-
+          
             // ---- Chart + Transaction List ----
             Expanded(
               child: ValueListenableBuilder<EventModel?>(
@@ -187,6 +188,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               height: screenHeight * 0.25,
                               child: TransactionList(type: selectedType,eventId: selectedEvent.id,),
                             ),
+                            
                           ),
                         ],
                       );

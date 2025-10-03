@@ -17,11 +17,11 @@ class ParticipantsModelAdapter extends TypeAdapter<ParticipantsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ParticipantsModel(
-      id: fields[1] as String?,
-      participantId: fields[2] as String,
-      eventId: fields[3] as String,
-      amountPaid: fields[4] as double,
-      joinedAt: fields[5] as DateTime,
+      id: fields[0] as String?,
+      participantId: fields[1] as String,
+      eventId: fields[2] as String,
+      amountPaid: fields[3] as double,
+      joinedAt: fields[4] as DateTime,
     );
   }
 
@@ -29,15 +29,15 @@ class ParticipantsModelAdapter extends TypeAdapter<ParticipantsModel> {
   void write(BinaryWriter writer, ParticipantsModel obj) {
     writer
       ..writeByte(5)
-      ..writeByte(1)
+      ..writeByte(0)
       ..write(obj.id)
-      ..writeByte(2)
+      ..writeByte(1)
       ..write(obj.participantId)
-      ..writeByte(3)
+      ..writeByte(2)
       ..write(obj.eventId)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.amountPaid)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.joinedAt);
   }
 

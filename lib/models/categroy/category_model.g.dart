@@ -20,14 +20,15 @@ class CategoryModelAdapter extends TypeAdapter<CategoryModel> {
       id: fields[0] as String?,
       name: fields[1] as String,
       type: fields[3] as CategoryType,
-      isDeleted: fields[2] as bool, eventId: '',
+      isDeleted: fields[2] as bool,
+      eventId: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CategoryModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class CategoryModelAdapter extends TypeAdapter<CategoryModel> {
       ..writeByte(2)
       ..write(obj.isDeleted)
       ..writeByte(3)
-      ..write(obj.type);
+      ..write(obj.type)
+      ..writeByte(4)
+      ..write(obj.eventId);
   }
 
   @override

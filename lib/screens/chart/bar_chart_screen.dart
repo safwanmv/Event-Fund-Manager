@@ -1,13 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
+import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BarChartScreen extends StatelessWidget {
-  const BarChartScreen({super.key});
+  final EventModel? selectedEvent;
+  const BarChartScreen({super.key, this.selectedEvent});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,8 @@ class BarChartScreen extends StatelessWidget {
       child: ValueListenableBuilder(
         valueListenable: TransactionDb.instance.transactionListNotifer,
         builder: (context, newList, child) {
-          final incomes = newList
+          final filteredList=selectedEvent==null?newList:newList.where((i)=>i.eventId==selectedEvent!.id).toList();
+          final incomes = filteredList
               .where((i) => i.type == CategoryType.income)
               .toList();
           if (incomes.isEmpty) {
