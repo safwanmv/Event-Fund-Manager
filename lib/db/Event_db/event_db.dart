@@ -50,7 +50,6 @@ class EventDb extends EventDbFunctions {
     double targetedAmount,
   ) async {
     String uniqueCode;
-    print("0");
     do {
       uniqueCode = EventModel.generateJoinCode(title);
     } while (_eventBox.values.any((event) => event.joinCode == uniqueCode));
@@ -114,5 +113,15 @@ class EventDb extends EventDbFunctions {
 
   void selectedEvent(EventModel? event) {
     selectedEventNotifer.value = event;
+  }
+
+  void searchEvents(String query) {
+    if (query.isEmpty) {
+      filteredEventsNotifer.value = getAllEvents();
+    } else {
+      filteredEventsNotifer.value = getAllEvents()
+          .where((i) => i.joinCode.contains(query))
+          .toList();
+    }
   }
 }

@@ -15,6 +15,7 @@ class CTextFromField extends StatefulWidget {
   final int? maxLines;
   final int? minLines;
   final void Function(String)? onChanged;
+  final FocusNode ? focusNode;
   const CTextFromField({
     super.key,
     required this.controller,
@@ -29,7 +30,7 @@ class CTextFromField extends StatefulWidget {
     this.textInputAction = TextInputAction.none,
     this.onFieldSubmitted,
     this.onTap,
-    this.onChanged,
+    this.onChanged,  this.focusNode,
   });
 
   @override

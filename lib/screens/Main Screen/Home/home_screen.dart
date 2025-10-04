@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:expense_tracker/CustomWidgets/c_text_form_field.dart';
@@ -5,6 +6,7 @@ import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/Events/event_model.dart';
+import 'package:expense_tracker/screens/Main%20Screen/Events/participent/participent_event_page_details.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Home/eventAddBottomSheet.dart';
 import 'package:expense_tracker/screens/chart/bar_chart_screen.dart';
 import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
@@ -20,16 +22,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late List<EventModel> _allEvents;
+  Timer? _debounce;
 
-  // List<EventModel>allEvents=[];
   @override
   void initState() {
     super.initState();
 
     TransactionDb.instance.refreshUI();
     EventDb.instance.refreshUI();
-    // allEvents=EventDb.instance.getAllEvents();
-    EventDb.instance.filteredEventsNotifer.value = [];
+    _allEvents = EventDb.instance.getAllEvents();
+    EventDb.instance.filteredEventsNotifer.value = _allEvents;
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
   }
 
   final _searchController = TextEditingController();
@@ -37,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final focusNode = FocusNode();
     final color = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -56,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? screenWidth - 52.w
                         : screenWidth * 0.55.r,
                     child: CTextFromField(
+                      // focusNode: focusNode,
                       controller: _searchController,
                       title: "Search the Event",
                       validator: (value) {
@@ -77,24 +89,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           : null,
                       textInputAction: TextInputAction.search,
+
                       onTap: () {
                         setState(() {
                           _isSearching = true;
                         });
+                        FocusScope.of(context).requestFocus(focusNode);
                       },
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          EventDb.instance.filteredEventsNotifer.value = [];
-                          return;
-                        }
-                        final query = value.trim();
-                        final filtered = EventDb.instance.getAllEvents().where((
-                          i,
-                        ) {
-                          return i.joinCode == query;
-                        }).toList();
-                        EventDb.instance.filteredEventsNotifer.value = filtered;
+                      onFieldSubmitted: (value) {
+                        FocusScope.of(context).unfocus();
+                        setState(() {
+                          _isSearching = true;
+                        });
+                        EventDb.instance.searchEvents(value.trim());
                       },
+                      // onChanged: (value) {
+                      //   if (_debounce?.isActive ?? false) _debounce!.cancel();
+                      //   _debounce = Timer(
+                      //     const Duration(milliseconds: 200),
+                      //     () {
+                      //       EventDb.instance.searchEvents(value.trim());
+                      //     },
+                      //   );
+                      // },
                     ),
                   ),
                 ),
@@ -150,8 +167,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (_searchController.text.isEmpty) {
                         return SizedBox();
                       }
+                      if (_searchController.text.isNotEmpty && events.isEmpty) {
+                        return const Center(
+                          child: EmptyDataContainer(
+                            text: TextMessages.noEvents,
+                          ),
+                        );
+                      }
                       if (events.isEmpty) {
-                        return const Center(child: Text("No Event found"));
+                        return Center(
+                          child: EmptyDataContainer(
+                            text: TextMessages.noEvents,
+                          ),
+                        );
                       }
                       return ListView.builder(
                         shrinkWrap: true,
@@ -159,12 +187,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: events.length,
                         itemBuilder: (context, index) {
                           final event = events[index];
-                          return Card(
-                            child: ListTile(
-                              textColor: color.onSurface,
-                              title: Text(event.title),
-                              subtitle: Text(event.joinCode),
-                              trailing: Text(event.createdBy),
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ParticipentEventPageDetails(selectedEvent: event,)));
+                            },
+                            child: Card(
+                              child: ListTile(
+                                textColor: color.onSurface,
+                                title: Text(event.title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16.sp),),
+                                subtitle: Text(event.description,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                trailing: Text(event.joinCode),
+                              ),
                             ),
                           );
                         },
@@ -176,8 +209,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ValueListenableBuilder(
               valueListenable: EventDb.instance.selectedEventNotifer,
               builder: (context, selectedEvent, child) {
-                return HomescreenTopBanner(selectedEvent: selectedEvent,);
-              }
+                return HomescreenTopBanner(selectedEvent: selectedEvent);
+              },
             ),
 
             ValueListenableBuilder(
@@ -186,12 +219,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 return eventList.isEmpty
                     ? EmptyDataContainer(text: TextMessages.noEvents)
                     : ValueListenableBuilder(
-                      valueListenable: EventDb.instance.selectedEventNotifer,
-                      builder: (context, selectedEvent, _) {
-                        return ValueListenableBuilder(
+                        valueListenable: EventDb.instance.selectedEventNotifer,
+                        builder: (context, selectedEvent, _) {
+                          return ValueListenableBuilder(
                             valueListenable:
                                 TransactionDb.instance.transactionListNotifer,
-                        
+
                             builder: (context, transactionList, _) {
                               return transactionList.isEmpty
                                   ? EmptyDataContainer(
@@ -199,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )
                                   : Padding(
                                       padding: EdgeInsets.only(left: 22.w),
-                        
+
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -220,14 +253,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                           //   ),
                                           // ),
                                           SizedBox(height: 50.h),
-                                          BarChartScreen(selectedEvent: selectedEvent,),
+                                          BarChartScreen(
+                                            selectedEvent: selectedEvent,
+                                          ),
                                         ],
                                       ),
                                     );
                             },
                           );
-                      }
-                    );
+                        },
+                      );
               },
             ),
           ],
