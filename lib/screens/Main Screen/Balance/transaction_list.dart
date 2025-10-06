@@ -1,4 +1,5 @@
 import 'package:expense_tracker/constants/text_messages.dart';
+import 'package:expense_tracker/db/Particpents_db/participents_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
@@ -18,27 +19,29 @@ class TransactionList extends StatelessWidget {
     return ValueListenableBuilder<List<TransactionsModel>>(
       valueListenable: TransactionDb.instance.transactionListNotifer,
       builder: (BuildContext ctx, List<TransactionsModel> newList, Widget? _) {
-        var filteredList = newList;
+        var filteredAdminTransactions = newList;
 
         if (type != null) {
-          filteredList = filteredList.where((i) => i.type == type).toList();
+          filteredAdminTransactions = filteredAdminTransactions
+              .where((i) => i.type == type)
+              .toList();
         }
 
         if (eventId != null) {
-          filteredList = filteredList
+          filteredAdminTransactions = filteredAdminTransactions
               .where((i) => i.eventId.trim() == eventId!.trim())
               .toList();
         }
 
-        if (filteredList.isEmpty) {
+        if (filteredAdminTransactions.isEmpty) {
           return EmptyDataContainer(text: TextMessages.noTransaction);
         }
 
         return ListView.separated(
-          itemCount: filteredList.length,
+          itemCount: filteredAdminTransactions.length,
           separatorBuilder: (context, index) => SizedBox(height: 6.h),
           itemBuilder: (context, index) {
-            final value = filteredList[index];
+            final value = filteredAdminTransactions[index];
             return TransactionTile(value: value);
           },
         );
@@ -55,6 +58,9 @@ class TransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    String participantName = ParticipantDb.instance.getParticipantName(
+      value.participantId,
+    );
 
     return Slidable(
       startActionPane: ActionPane(
@@ -76,8 +82,8 @@ class TransactionTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(26.r),
         ),
         child: ListTile(
-          title: Text(value.name, style: TextStyle(fontSize: 16.sp)),
-          leading: CircleAvatar(child: Text(value.name[0].toUpperCase())),
+          title: Text(participantName, style: TextStyle(fontSize: 16.sp)),
+          leading: CircleAvatar(child: Text(participantName[0].toUpperCase())),
           subtitle: Text(
             DateFormat('dd MMM yyyy').format(value.date),
             style: TextStyle(color: color.primary, fontSize: 16.sp),

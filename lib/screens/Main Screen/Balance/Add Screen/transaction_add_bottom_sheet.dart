@@ -249,6 +249,7 @@ class _TransactionAddBottomSheetState extends State<TransactionAddBottomSheet> {
                       selectDateTime!,
                       eventId,
                     );
+                  
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

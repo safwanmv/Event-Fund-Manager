@@ -1,5 +1,6 @@
 import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Event_db/event_db.dart';
+import 'package:expense_tracker/db/Particpents_db/participents_db.dart';
 import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/Events/event_model.dart';
@@ -9,6 +10,7 @@ import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/categ
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/transaction_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';
 import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
+import 'package:expense_tracker/widgets/formatted/formatted_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +28,6 @@ class _BalanceScreenState extends State<BalanceScreen> {
     super.initState();
     TransactionDb.instance.refreshUI();
     EventDb.instance.refreshUI();
-    
   }
 
   @override
@@ -38,12 +39,14 @@ class _BalanceScreenState extends State<BalanceScreen> {
         builder: (context, eventlist, _) {
           return eventlist.isEmpty
               ? Column(
-                children: [
-                  Center(child: EmptyDataContainer(text: TextMessages.noEvents)),
-                ],
-              )
+                  children: [
+                    Center(
+                      child: EmptyDataContainer(text: TextMessages.noEvents),
+                    ),
+                  ],
+                )
               : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ValueListenableBuilder<List<EventModel>>(
                       valueListenable: EventDb.instance.eventListNotifer,
@@ -114,7 +117,16 @@ class _BalanceScreenState extends State<BalanceScreen> {
                         return Row(
                           children: [
                             Expanded(
-                              child: BalanceCard(selectedEvent: selectedEvent),
+                              child: ValueListenableBuilder(
+                                valueListenable: ParticipantDb
+                                    .instance
+                                    .participantsListNotifer,
+                                builder: (context, participantList, _) {
+                                  return BalanceCard(
+                                    selectedEvent: selectedEvent,
+                                  );
+                                },
+                              ),
                             ),
                             Column(
                               children: [
@@ -194,7 +206,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                               ),
                             );
                           } else {
-                            return TransactionList(eventId: selectedEvent.id,);
+                            return TransactionList(eventId: selectedEvent.id);
                           }
                         },
                       ),
@@ -236,13 +248,16 @@ class BalanceCard extends StatelessWidget {
               0.0,
               (previousValue, element) => previousValue + element.amount,
             );
-
         double totalExpense = filteredList
             .where((i) => i.type == CategoryType.expense)
-            .fold(
-              0.0,
-              (previousValue, element) => previousValue + element.amount,
-            );
+            .fold(0.0, (prev, element) => prev + element.amount);
+
+        // double totalParticipantContribution = ParticipantDb.instance
+        //     .getParticipantsByEventId(selectedEvent!.id)
+        //     .fold(
+        //       0.0,
+        //       (previousValue, element) => previousValue + element.amountPaid,
+        //     );
         double balance = totalIncome - totalExpense;
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0.w),
@@ -270,35 +285,55 @@ class BalanceCard extends StatelessWidget {
                               constraints: BoxConstraints(minHeight: 100.h),
                               padding: EdgeInsets.all(16.r),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     selectedEvent!.title,
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.sp,
                                     ),
                                   ),
-                                  SizedBox(height: 10.h),
+
+                                  SizedBox(height: 6.h),
+
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: Text(
+                                  //         selectedEvent!.description,
+                                  //         style: TextStyle(
+                                  //           color: Colors.black,
+                                  //           fontSize: 16.sp,
+                                  //         ),
+                                  //         maxLines: 1,
+                                  //         overflow: TextOverflow.ellipsis,
+                                  //       ),
+                                  //     ),
+
+                                  //   ],
+                                  // ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        child: Text(
-                                          selectedEvent!.description,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16.sp,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                       Text(
-                                        formattedDate(selectedEvent!.date),
+                                        "Targeted Amount : ${selectedEvent!.targetedAmount}",
                                         style: TextStyle(
                                           color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Created Date        :  ${FormattedDate.date(selectedEvent!.date)}",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                           fontSize: 16.sp,
                                         ),
                                       ),
@@ -330,10 +365,10 @@ class BalanceCard extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        "Targeted Amount: ${selectedEvent!.targetedAmount.toString()}",
+                                        "Collected Amount: ${selectedEvent!.collectedAmount}",
                                         style: TextStyle(
-                                          color: color.primary,
                                           fontSize: 16.sp,
+                                          color: color.primary,
                                         ),
                                       ),
                                     ],
