@@ -20,7 +20,9 @@ class BarChartScreen extends StatelessWidget {
       child: ValueListenableBuilder(
         valueListenable: TransactionDb.instance.transactionListNotifer,
         builder: (context, newList, child) {
-          final filteredList=selectedEvent==null?newList:newList.where((i)=>i.eventId==selectedEvent!.id).toList();
+          final filteredList = selectedEvent == null
+              ? newList
+              : newList.where((i) => i.eventId == selectedEvent!.id).toList();
           final incomes = filteredList
               .where((i) => i.type == CategoryType.income)
               .toList();
@@ -38,8 +40,8 @@ class BarChartScreen extends StatelessWidget {
           final double highest = topIncomes
               .map((i) => i.amount)
               .fold(0.0, (p, e) => math.max(p, e));
-
-          const double step = 5000; //we can set limit by the admin
+          double selectedEventStep = selectedEvent?.targetedAmount ?? 5000;
+          double step = selectedEventStep; //we can set limit by the admin
 
           final double rawMaxY = highest * 1.2;
 
@@ -60,7 +62,7 @@ class BarChartScreen extends StatelessWidget {
                     final amt = topIncomes[idx].amount;
 
                     return BarTooltipItem(
-                      "$amt.toStringAsFixed(2)",
+                      amt.toStringAsFixed(2),
                       TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
