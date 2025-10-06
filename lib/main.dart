@@ -28,7 +28,7 @@ void main() async {
   await UserDb.instance.initUserBox();
   await UserDb.instance.loadActiveUser();
   await EventDb.instance.initEventBox();
-  await ParticipentsDb.instance.initParticipantBox();
+  await ParticipantDb.instance.initParticipantBox();
 
   runApp(MyApp());
 }

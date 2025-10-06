@@ -23,13 +23,14 @@ class TransactionsModelAdapter extends TypeAdapter<TransactionsModel> {
       date: fields[3] as DateTime,
       type: fields[4] as CategoryType,
       eventId: fields[5] as String,
+      participantId: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionsModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class TransactionsModelAdapter extends TypeAdapter<TransactionsModel> {
       ..writeByte(4)
       ..write(obj.type)
       ..writeByte(5)
-      ..write(obj.eventId);
+      ..write(obj.eventId)
+      ..writeByte(6)
+      ..write(obj.participantId);
   }
 
   @override

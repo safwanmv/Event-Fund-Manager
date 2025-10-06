@@ -50,6 +50,7 @@ class EventDb extends EventDbFunctions {
     double targetedAmount,
   ) async {
     String uniqueCode;
+    print("0");
     do {
       uniqueCode = EventModel.generateJoinCode(title);
     } while (_eventBox.values.any((event) => event.joinCode == uniqueCode));

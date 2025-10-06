@@ -16,10 +16,10 @@ abstract class ParticipentsDbFunctions {
   Future<void> refreshUI();
 }
 
-class ParticipentsDb extends ParticipentsDbFunctions {
-  ParticipentsDb._internal();
-  static ParticipentsDb instance = ParticipentsDb._internal();
-  factory ParticipentsDb() {
+class ParticipantDb extends ParticipentsDbFunctions {
+  ParticipantDb._internal();
+  static ParticipantDb instance = ParticipantDb._internal();
+  factory ParticipantDb() {
     return instance;
   }
 
@@ -48,7 +48,7 @@ class ParticipentsDb extends ParticipentsDbFunctions {
   @override
   ParticipantsModel? getParticipantsById(String id) {
     try {
-      return _participentsBox.get(id);
+      return _participentsBox.values.firstWhere((i)=>i.participantId==id);
     } catch (_) {
       return null;
     }
@@ -75,5 +75,15 @@ class ParticipentsDb extends ParticipentsDbFunctions {
   Future<void> refreshUI() async {
     participantsListNotifer.value = getAllParticipants();
     participantsListNotifer.value = [...participantsListNotifer.value];
+  }
+
+  String getParticipantName(String? id) {
+    if (id == null) return "Admin Entry";
+    final participant = getParticipantsById(id);
+
+
+    return participant != null
+        ? participant.participantName
+        : "Unknown Participant";
   }
 }

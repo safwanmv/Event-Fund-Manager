@@ -17,13 +17,17 @@ class TransactionsModel {
   final CategoryType type;
   @HiveField(5)
   final String eventId;
+  @HiveField(6)
+  final String? participantId;
 
   TransactionsModel({
     String? id,
     required this.name,
     required this.amount,
     required this.date,
-    required this.type, 
+    required this.type,
     required this.eventId,
+    this.participantId,
   }) : id = id ?? const Uuid().v4();
+
 }

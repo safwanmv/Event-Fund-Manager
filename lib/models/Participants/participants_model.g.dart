@@ -19,16 +19,19 @@ class ParticipantsModelAdapter extends TypeAdapter<ParticipantsModel> {
     return ParticipantsModel(
       id: fields[0] as String?,
       participantId: fields[1] as String,
+      participantName: fields[7] as String,
       eventId: fields[2] as String,
       amountPaid: fields[3] as double,
       joinedAt: fields[4] as DateTime,
+      paymentCategory: fields[5] as CategoryModel,
+      isReceived: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ParticipantsModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +41,13 @@ class ParticipantsModelAdapter extends TypeAdapter<ParticipantsModel> {
       ..writeByte(3)
       ..write(obj.amountPaid)
       ..writeByte(4)
-      ..write(obj.joinedAt);
+      ..write(obj.joinedAt)
+      ..writeByte(5)
+      ..write(obj.paymentCategory)
+      ..writeByte(6)
+      ..write(obj.isReceived)
+      ..writeByte(7)
+      ..write(obj.participantName);
   }
 
   @override

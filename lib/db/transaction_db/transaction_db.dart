@@ -2,6 +2,7 @@
 //   Future<List<
 // }
 
+import 'package:expense_tracker/db/Event_db/event_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
 import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ abstract class TransactionDbFunctions {
   Future<void> deleteTransaction(String id);
   Future<void> refreshUI();
 }
-
 
 class TransactionDb implements TransactionDbFunctions {
   ValueNotifier<List<TransactionsModel>> transactionListNotifer = ValueNotifier(
@@ -53,7 +53,7 @@ class TransactionDb implements TransactionDbFunctions {
     _getAllTransactionList.sort(
       (first, second) => second.date.compareTo(first.date),
     );
-    transactionListNotifer.value=List.from(_getAllTransactionList);
+    transactionListNotifer.value = List.from(_getAllTransactionList);
   }
 
   @override
@@ -63,25 +63,30 @@ class TransactionDb implements TransactionDbFunctions {
   }
 
   Future<void> addTransactionTODB(
-    String name,double amount,
+    String name,
+    double amount,
     CategoryType selectedCategory,
     DateTime selectedDateTime,
     String eventId,
   ) async {
-  
-    
     final model = TransactionsModel(
       name: name,
       amount: amount,
       date: selectedDateTime,
-      type: selectedCategory, 
+      type: selectedCategory,
       eventId: eventId,
     );
+
     print("Adding transaction with eventId: '$eventId'");
 
     await TransactionDb.instance.addTransaction(model);
+    if (selectedCategory == CategoryType.income) {
+      final event = EventDb.instance.getEventsById(eventId);
+      if (event != null) {
+        event.collectedAmount += amount;
+        await EventDb.instance.updateEvent(event);
+      }
+    }
+    await refreshUI();
   }
-  
-
-  
 }
