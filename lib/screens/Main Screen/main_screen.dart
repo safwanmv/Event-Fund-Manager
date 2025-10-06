@@ -1,6 +1,6 @@
 import 'package:expense_tracker/screens/Main%20Screen/Analytics/analytics_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/balance_screen.dart';
-import 'package:expense_tracker/screens/Main%20Screen/Events/events_list.dart';
+import 'package:expense_tracker/screens/Main%20Screen/Events/event_participant_page.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Home/home_screen.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Profile/profile_screen.dart';
 import 'package:expense_tracker/widgets/bottom_navigation/bottom_naviagtion.dart';
@@ -14,7 +14,7 @@ class MainScreen extends StatelessWidget {
     AnalyticsScreen(),
     BalanceScreen(),
     HomeScreen(),
-    EventsList(),
+    EventParticipantPage(),
     ProfileScreen(),
   ];
 
@@ -48,5 +48,18 @@ class MainScreen extends StatelessWidget {
   }
 }
 
+//
+//completed:-analythics screen drop down and new screen when we tap the event from the event list and go to that page and 
+//
+//completed:-filtering search
+//completed:-.we can add money 
 
-//analythics screen drop down and new screen when we tap the event from the event list and go to that page and we can add money and see other detials
+
+//3.participated events
+//4.single transaction list for all the income
+//5.pie chart make dynamic with particepnets also 
+//6.make two screen one for created events and other for participated events
+//7.make not visible when user is not create an event
+//8.profile ui changes
+//9.check everything
+//10. connect to firebase

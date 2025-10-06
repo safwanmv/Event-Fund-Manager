@@ -128,6 +128,7 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                       final DateTime date=DateTime.now();
                       EventDb.instance.createEvent(title, description, date, createdBy, targetedAmountDouble);
                     await EventDb.instance.refreshUI();
+                    EventDb.instance.filteredEventsNotifer.value=EventDb.instance.getAllEvents();
                     if(!mounted) return;
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(

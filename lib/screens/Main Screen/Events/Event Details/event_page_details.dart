@@ -111,16 +111,16 @@ class EventPageDetails extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             ValueListenableBuilder(
-              valueListenable: ParticipentsDb.instance.participantsListNotifer,
+              valueListenable: ParticipantDb.instance.participantsListNotifer,
               builder: (context, List<ParticipantsModel> participants, _) {
                 final eventParticipants = participants
                     .where((p) => p.eventId == selectedEvent!.id)
                     .toList();
-                if(eventParticipants.isEmpty){
-                  return EmptyDataContainer(text:TextMessages.noParticpants);
+                if (eventParticipants.isEmpty) {
+                  return EmptyDataContainer(text: TextMessages.noParticpants);
                 }
                 return Table(
-                  border: TableBorder.all(color: color.onSurfaceVariant),
+                  border: TableBorder.all(color: color.primary,borderRadius: BorderRadius.circular(7.r)),
                   columnWidths: const {
                     0: FlexColumnWidth(1),
                     1: FlexColumnWidth(3),
@@ -128,7 +128,7 @@ class EventPageDetails extends StatelessWidget {
                   },
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(color: color.primary),
+                      // decoration: BoxDecoration(color: color.primary,),
                       children: [
                         CustomTableCell(
                           text: "S.NO",
@@ -154,6 +154,8 @@ class EventPageDetails extends StatelessWidget {
                       final user = UserDb.instance.getUserById(p.participantId);
                       // double amount=entry.value;
                       return TableRow(
+                        // decoration: BoxDecoration(color: color.primary),
+
                         children: [
                           CustomTableCell(text: "$idx"),
                           CustomTableCell(text: user?.name ?? "unknown"),
