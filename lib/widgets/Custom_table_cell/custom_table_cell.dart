@@ -25,7 +25,7 @@ class CustomTableCell extends StatelessWidget {
         style: TextStyle(
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
           fontSize: isHeader ? 16.sp : 14.sp,
-          color: color.surface,
+          color: color.primary,
         ),
         overflow: TextOverflow.ellipsis,
       ),
