@@ -12,7 +12,8 @@ import 'package:intl/intl.dart';
 class TransactionList extends StatelessWidget {
   final CategoryType? type;
   final String? eventId;
-  const TransactionList({super.key, this.type, this.eventId});
+  final String? userId;
+  const TransactionList({super.key, this.type, this.eventId, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,12 @@ class TransactionList extends StatelessWidget {
         if (eventId != null) {
           filteredAdminTransactions = filteredAdminTransactions
               .where((i) => i.eventId.trim() == eventId!.trim())
+              .toList();
+        }
+
+        if (userId != null) {
+          filteredAdminTransactions = filteredAdminTransactions
+              .where((i) => i.participantId == userId)
               .toList();
         }
 
