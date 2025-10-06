@@ -13,7 +13,6 @@ import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:expense_tracker/widgets/formatted/formatted_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -391,6 +390,6 @@ class BalanceCard extends StatelessWidget {
   }
 }
 
-String formattedDate(DateTime date) {
-  return DateFormat('dd MMM yyyy').format(date);
-}
+// String formattedDate(DateTime date) {
+//   return DateFormat('dd MMM yyyy').format(date);
+// }

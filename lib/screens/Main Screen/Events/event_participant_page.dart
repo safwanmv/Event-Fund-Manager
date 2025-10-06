@@ -45,7 +45,7 @@ class _EventParticipantPageState extends State<EventParticipantPage>
                     dividerColor: color.surface,
                     tabs: const [
                       Tab(text: "Created Events"),
-                      Tab(text: "Participants"),
+                      Tab(text: "Participated"),
                     ],
                   ),
                 ],

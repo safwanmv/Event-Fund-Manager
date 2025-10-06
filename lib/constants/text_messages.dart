@@ -3,4 +3,5 @@ class TextMessages {
   static const String noEvents =
       "You have not created any events yet.\nTap '+ Create Events' button to add a new event.";
   static const String noParticpants="No participants yet";
+  static const String notParticipatedAnyEvents="Not Participated in any Events";
 }

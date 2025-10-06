@@ -16,11 +16,11 @@ class EventsList extends StatelessWidget {
       valueListenable: EventDb.instance.eventListNotifer,
       builder: (context, eventList, _) {
         if (eventList.isEmpty) {
-          return SafeArea(child: Column(
-            children: [
-              EmptyDataContainer(text: TextMessages.noEvents,),
-            ],
-          ));
+          return SafeArea(
+            child: Column(
+              children: [EmptyDataContainer(text: TextMessages.noEvents)],
+            ),
+          );
         }
         return ListView.separated(
           itemBuilder: (context, index) {
@@ -44,7 +44,12 @@ class EventsList extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EventPageDetails(selectedEvent: value,))),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventPageDetails(selectedEvent: value),
+                    ),
+                  ),
                   child: Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -64,7 +69,6 @@ class EventsList extends StatelessWidget {
                       ),
                       subtitle: Text(value.joinCode),
                       trailing: Text(value.participants.length.toString()),
-                  
                     ),
                   ),
                 ),
