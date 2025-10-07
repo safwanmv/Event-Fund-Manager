@@ -55,11 +55,11 @@ class MainScreen extends StatelessWidget {
 //completed:-.we can add money 
 
 
-//3.participated events
-//4.single transaction list for all the income
-//5.pie chart make dynamic with particepnets also 
-//6.make two screen one for created events and other for participated events
+//completed.participated events
+//completed.single transaction list for all the income
+//oompleted.pie chart make dynamic with particepnets also 
+//completed.make two screen one for created events and other for participated events
 //7.make not visible when user is not create an event
-//8.profile ui changes
+//completed.profile ui changes
 //9.check everything
 //10. connect to firebase

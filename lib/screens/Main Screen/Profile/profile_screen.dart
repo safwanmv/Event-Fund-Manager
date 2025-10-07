@@ -1,5 +1,4 @@
 import 'package:expense_tracker/db/Users_db/users_db.dart';
-import 'package:expense_tracker/main.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -9,38 +8,87 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: UserDb.instance.activeUserNotifier,
-      builder: (context,activeUser, _) {
-        if (activeUser==null) {
+      builder: (context, activeUser, _) {
+        if (activeUser == null) {
           return const Center(child: CircularProgressIndicator());
         }
-        return Center(
-          child: SafeArea(
+
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                ValueListenableBuilder(
-                  valueListenable: isDark,
-                  builder: (context, value, child) {
-                    return Column(
+                // Profile Avatar
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.blueAccent,
+                  child: Text(
+                    activeUser.name.isNotEmpty
+                        ? activeUser.name[0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // User Info Card
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
+                    child: Column(
                       children: [
-                        IconButton.filledTonal(
-                          icon: Icon(
-                            isDark.value ? Icons.dark_mode : Icons.light_mode,
-                          ),
-                          onPressed: () => isDark.value = !isDark.value,
-                        ),
-                        Text(activeUser.name),
-                        Text(activeUser.email),
-                        Text(activeUser.id),
-                        Text(activeUser.password),
+                        _infoField("Name", activeUser.name),
+                        const SizedBox(height: 12),
+                        _infoField("Email", activeUser.email),
+                        const SizedBox(height: 12),
+                        // Example editable field
+                        // TextFormField(
+                          
+                        //   initialValue: activeUser.name,
+                        //   decoration: const InputDecoration(
+                        //     labelText: "Edit Name",
+                        //     border: OutlineInputBorder(),
+                        //   ),
+                        // ),
                       ],
-                    );
-                  },
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  // Widget for displaying info with label
+  Widget _infoField(String label, String value) {
+    return Row(
+      children: [
+        Text(
+          "$label: ",
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -19,151 +19,223 @@ class EventPageDetails extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text("Event Details")),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      appBar: AppBar(
+        title: const Text("Event Details"),
+        centerTitle: true,
+        elevation: 1,
+      ),
+
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Text(
-                selectedEvent!.title,
-                style: TextStyle(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.bold,
-                  color: color.primary,
+            // 🔹 [1] Event title & description wrapped in a Card
+            Card(
+              color: color.surfaceDim,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      selectedEvent!.title,
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: color.primary,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      selectedEvent!.description,
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: color.onSurface.withOpacity(0.8),
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      "Created on: ${FormattedDate.date(selectedEvent!.date)}",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: color.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Text(
-              selectedEvent!.description,
-              style: TextStyle(fontSize: 16.sp),
-              softWrap: true,
-            ),
-            SizedBox(height: 16.h),
-            Text("Created Date: ${FormattedDate.date(selectedEvent!.date)}"),
-            SizedBox(height: 12.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text("Targeted Amount"),
-                Text("Collected Amount"),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(15.0.r),
+
+            SizedBox(height: 10.h),
+
+            // 🔹 [2] Amount summary with subtle container
+            Container(
+              padding: EdgeInsets.all(16.r),
+              decoration: BoxDecoration(
+                color: color.surfaceDim,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${selectedEvent!.targetedAmount}"),
-                  Text(
-                    "${selectedEvent!.collectedAmount}",
-                    style: TextStyle(color: Colors.green),
+                  _amountColumn(
+                    "Targeted",
+                    selectedEvent!.targetedAmount.toString(),
+                    color.primary,
+                  ),
+                  _amountColumn(
+                    "Collected",
+                    selectedEvent!.collectedAmount.toString(),
+                    Colors.green,
                   ),
                 ],
               ),
             ),
 
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7.r),
-                border: BoxBorder.all(color: color.onPrimary, width: 3),
+            SizedBox(height: 10.h),
+
+            // 🔹 [3] Join code card with icons
+            Card(
+              color: color.surfaceDim,
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Join Code: ${selectedEvent!.joinCode}",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Join Code: ${selectedEvent!.joinCode}",
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.copy, color: color.onSurface),
-                    onPressed: () {
-                      Clipboard.setData(
-                        ClipboardData(text: selectedEvent!.joinCode),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Copied to clipboard!"),
-                          backgroundColor: color.primary,
-                        ),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      print("share clicked");
-                    },
-                    icon: Icon(Icons.share, color: color.primary),
-                  ),
-                ],
+                    IconButton(
+                      icon: const Icon(Icons.copy),
+                      color: color.primary,
+                      onPressed: () {
+                        Clipboard.setData(
+                          ClipboardData(text: selectedEvent!.joinCode),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: const Text("Copied to clipboard!")),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.share),
+                      color: color.primary,
+                      onPressed: () {
+                        // TODO: Add share logic
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 16),
+
+            SizedBox(height: 20.h),
+
+            // 🔹 [4] Participants Table section
             Text(
               "Participants",
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 10.h),
+
             ValueListenableBuilder(
               valueListenable: ParticipantDb.instance.participantsListNotifer,
               builder: (context, List<ParticipantsModel> participants, _) {
                 final eventParticipants = participants
                     .where((p) => p.eventId == selectedEvent!.id)
                     .toList();
+
                 if (eventParticipants.isEmpty) {
-                  return EmptyDataContainer(text: TextMessages.noParticpants);
+                  return Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: EmptyDataContainer(text: TextMessages.noParticpants),
+                  );
                 }
-                return Table(
-                  border: TableBorder.all(color: color.primary,borderRadius: BorderRadius.circular(7.r)),
-                  columnWidths: const {
-                    0: FlexColumnWidth(1),
-                    1: FlexColumnWidth(3),
-                    2: FlexColumnWidth(2),
-                  },
-                  children: [
-                    TableRow(
-                      // decoration: BoxDecoration(color: color.primary,),
+
+                return Card(
+                  color: color.surfaceDim,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  elevation: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.r),
+                    child: Table(
+                      border: TableBorder.symmetric(
+                        inside: BorderSide(
+                          color: color.primary.withValues(alpha: 0.2),
+                        ), // updated for new Flutter version
+                      ),
+                      columnWidths: const {
+                        0: FlexColumnWidth(1),
+                        1: FlexColumnWidth(3),
+                        2: FlexColumnWidth(2),
+                        3: FlexColumnWidth(3), // 👈 new column for Joined Date
+                      },
                       children: [
-                        CustomTableCell(
-                          text: "S.NO",
-                          isHeader: true,
-                          textAlign: TextAlign.center,
+                        TableRow(
+                          decoration: BoxDecoration(
+                            color: color.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          children: const [
+                            CustomTableCell(
+                              text: "S.No",
+                              isHeader: true,
+                              textAlign: TextAlign.center,
+                            ),
+                            CustomTableCell(
+                              text: "Name",
+                              isHeader: true,
+                              textAlign: TextAlign.center,
+                            ),
+                            CustomTableCell(
+                              text: "Amount",
+                              isHeader: true,
+                              textAlign: TextAlign.center,
+                            ),
+                            CustomTableCell(
+                              text: "Joined Date",
+                              isHeader: true,
+                              textAlign: TextAlign.center,
+                            ), // 👈 new header
+                          ],
                         ),
-                        CustomTableCell(
-                          text: "Participant Name",
-                          isHeader: true,
-                          textAlign: TextAlign.center,
-                        ),
-                        CustomTableCell(
-                          text: "Amount",
-                          isHeader: true,
-                          textAlign: TextAlign.center,
-                        ),
+                        ...eventParticipants.asMap().entries.map((entry) {
+                          int idx = entry.key + 1;
+                          ParticipantsModel p = entry.value;
+                          final user = UserDb.instance.getUserById(
+                            p.participantId,
+                          );
+
+                          return TableRow(
+                            children: [
+                              CustomTableCell(text: "$idx"),
+                              CustomTableCell(text: user?.name ?? "Unknown"),
+                              CustomTableCell(text: "${p.amountPaid}"),
+                              CustomTableCell(
+                                text: FormattedDate.date(p.joinedAt),
+                              ),
+                            ],
+                          );
+                        }),
                       ],
                     ),
-                    ...eventParticipants.asMap().entries.map((entry) {
-                      int idx = entry.key + 1;
-                      ParticipantsModel p = entry.value;
-
-                      final user = UserDb.instance.getUserById(p.participantId);
-                      // double amount=entry.value;
-                      return TableRow(
-                        // decoration: BoxDecoration(color: color.primary),
-
-                        children: [
-                          CustomTableCell(text: "$idx"),
-                          CustomTableCell(text: user?.name ?? "unknown"),
-                          CustomTableCell(text: "${p.amountPaid}"),
-                        ],
-                      );
-                    }),
-                  ],
+                  ),
                 );
               },
             ),
@@ -173,7 +245,25 @@ class EventPageDetails extends StatelessWidget {
     );
   }
 
-  void copyText(String text) {
-    Clipboard.setData(ClipboardData(text: text));
+  // 🔹 [Helper Widget] for displaying amounts
+  Widget _amountColumn(String label, String value, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+      ],
+    );
   }
 }
