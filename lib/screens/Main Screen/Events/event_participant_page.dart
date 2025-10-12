@@ -31,28 +31,31 @@ class _EventParticipantPageState extends State<EventParticipantPage>
     return DefaultTabController(
       length: 2,
       child: Padding(
-        padding: const EdgeInsets.all(0.0),
+        padding: EdgeInsets.only(top: 25.0.h),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-              child: Column(
-                children: [
-                  TabBar(
-                    automaticIndicatorColorAdjustment: true,
-                    labelColor: color.onSurface,
-                    unselectedLabelColor: color.surfaceTint,
-                    dividerColor: color.surface,
-                    tabs: const [
-                      Tab(text: "Created Events"),
-                      Tab(text: "Participated"),
-                    ],
-                  ),
-                ],
-              ),
+            TabBar(
+              labelPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+              ), // 👈 more tappable area
+              indicatorSize: TabBarIndicatorSize.tab,
+                        
+              automaticIndicatorColorAdjustment: true,
+              labelColor: color.onSurface,
+              unselectedLabelColor: color.surfaceTint,
+              dividerColor: color.surface,
+              tabs: const [
+                Tab(text: "Created Events"),
+                Tab(text: "Participated"),
+              ],
             ),
+            
+
             Expanded(
+              
+              
               child: TabBarView(
+
                 children: const [EventsList(), ParticipetedEventList()],
               ),
             ),
