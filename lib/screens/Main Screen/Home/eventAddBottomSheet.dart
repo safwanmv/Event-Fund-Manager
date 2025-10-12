@@ -112,7 +112,7 @@ class _EventaddbottomsheetState extends State<Eventaddbottomsheet> {
                       vertical: 6.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(12.r),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     backgroundColor: color.primary,
                     foregroundColor: color.surface,
