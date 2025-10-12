@@ -69,134 +69,140 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           });
         }
 
-        return Column(
-          children: [
-            // ---- Event Dropdown ----
-            eventList.isEmpty
-                ? SizedBox()
-                : ValueListenableBuilder<EventModel?>(
-                    valueListenable: EventDb.instance.selectedEventNotifer,
-                    builder: (context, selectedEvent, _) {
-                      final safeSelectedEvent =
-                          userEvents.contains(selectedEvent)
-                          ? selectedEvent
-                          : null;
-
-                      return DropdownButton<EventModel>(
-                        hint: Text(
-                          "Select Your Event",
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                        value: safeSelectedEvent,
-                        isExpanded: false,
-                        underline: SizedBox(),
-                        items: userEvents.map((event) {
-                          return DropdownMenuItem(
-                            value: event,
-                            child: Text(event.title),
-                          );
-                        }).toList(),
-                        onChanged: (event) {
-                          EventDb.instance.selectedEvent(event);
-                        },
-                      );
-                    },
-                  ),
-          
-            // ---- Chart + Transaction List ----
-            Expanded(
-              child: ValueListenableBuilder<EventModel?>(
-                valueListenable: EventDb.instance.selectedEventNotifer,
-                builder: (context, selectedEvent, _) {
-                  if (selectedEvent == null) {
-                    return SafeArea(
-                      child: Column(
-                        children: [
-                          Center(
-                            child:EmptyDataContainer(text: TextMessages.noEvents)
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return ValueListenableBuilder(
-                    valueListenable:
-                        TransactionDb.instance.transactionListNotifer,
-                    builder: (context, transactionList, _) {
-                      final filteredTransactions = transactionList
-                          .where((t) => t.eventId == selectedEvent.id)
-                          .toList();
-
-                      if (filteredTransactions.isEmpty) {
-                        return EmptyDataContainer(
-                          text: TextMessages.noTransaction,
-                        );
-                      }
-
-                      return CustomScrollView(
-                        controller: _scrollController,
-                        slivers: [
-                          // ---- Collapsible Header ----
-                          SliverPersistentHeader(
-                            pinned: true,
-                            delegate: _AnalyticsHeaderDelegate(
-                              minExtent: screenHeight * 0.5.h,
-                              maxExtent: screenHeight * 0.6.h,
-                              selectedType: selectedType,
-                              onTypeChanged: (type) {
-                                setState(() => selectedType = type);
-                              },
-                            ),
-                          ),
-
-                          // ---- Recent Transaction Title ----
-                          SliverToBoxAdapter(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 12.w,
-                                vertical: 1.h,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+        return SafeArea(
+          child: Column(
+            children: [
+              // ---- Event Dropdown ----
+              eventList.isEmpty
+                  ? SizedBox()
+                  // if we want to add the drop down list just uncomment
+                  // : ValueListenableBuilder<EventModel?>(
+                  //     valueListenable: EventDb.instance.selectedEventNotifer,
+                  //     builder: (context, selectedEvent, _) {
+                  //       final safeSelectedEvent =
+                  //           userEvents.contains(selectedEvent)
+                  //           ? selectedEvent
+                  //           : null;
+                  //       return SafeArea(
+                  //         child: DropdownButton<EventModel>(
+                  //           hint: Text(
+                  //             "Select Your Event",
+                  //             style: TextStyle(fontSize: 14.sp),
+                  //           ),
+                  //           value: safeSelectedEvent,
+                  //           isExpanded: false,
+                  //           underline: SizedBox(),
+                  //           items: userEvents.map((event) {
+                  //             return DropdownMenuItem(
+                  //               value: event,
+                  //               child: Text(event.title),
+                  //             );
+                  //           }).toList(),
+                  //           onChanged: (event) {
+                  //             EventDb.instance.selectedEvent(event);
+                  //           },
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ---- Chart + Transaction List ----
+                  : Expanded(
+                      child: ValueListenableBuilder<EventModel?>(
+                        valueListenable: EventDb.instance.selectedEventNotifer,
+                        builder: (context, selectedEvent, _) {
+                          if (selectedEvent == null) {
+                            return SafeArea(
+                              child: Column(
                                 children: [
-                                  Text(
-                                    "Recent Transaction",
-                                    style: TextStyle(
-                                      fontSize: 25.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: color.primary,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: scrollToList,
-                                    child: Text(
-                                      "See All",
-                                      style: TextStyle(fontSize: 14.sp),
+                                  Center(
+                                    child: EmptyDataContainer(
+                                      text: TextMessages.noEvents,
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
+                            );
+                          }
 
-                          // ---- Transaction List ----
-                          SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: screenHeight * 0.25,
-                              child: TransactionList(type: selectedType,eventId: selectedEvent.id,),
-                            ),
-                            
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                          return ValueListenableBuilder(
+                            valueListenable:
+                                TransactionDb.instance.transactionListNotifer,
+                            builder: (context, transactionList, _) {
+                              final filteredTransactions = transactionList
+                                  .where((t) => t.eventId == selectedEvent.id)
+                                  .toList();
+
+                              if (filteredTransactions.isEmpty) {
+                                return EmptyDataContainer(
+                                  text: TextMessages.noTransaction,
+                                );
+                              }
+
+                              return CustomScrollView(
+                                controller: _scrollController,
+                                slivers: [
+                                  // ---- Collapsible Header ----
+                                  SliverPersistentHeader(
+                                    pinned: true,
+                                    delegate: _AnalyticsHeaderDelegate(
+                                      minExtent: screenHeight * 0.5.h,
+                                      maxExtent: screenHeight * 0.6.h,
+                                      selectedType: selectedType,
+                                      onTypeChanged: (type) {
+                                        setState(() => selectedType = type);
+                                      },
+                                    ),
+                                  ),
+
+                                  // ---- Recent Transaction Title ----
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Recent Transaction",
+                                            style: TextStyle(
+                                              fontSize: 25.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: color.primary,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: scrollToList,
+                                            child: Text(
+                                              "See All",
+                                              style: TextStyle(fontSize: 14.sp),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // ---- Transaction List ----
+                                  SliverToBoxAdapter(
+                                    child: SizedBox(
+                                      height: screenHeight * 0.33,
+                                      child: TransactionList(
+                                        type: selectedType,
+                                        eventId: selectedEvent.id,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
               ),
-            ),
-          ],
+           ],
+         ),
         );
       },
     );
@@ -274,17 +280,20 @@ class _AnalyticsHeaderDelegate extends SliverPersistentHeaderDelegate {
                 ],
               ),
               SizedBox(height: 40.h * (1 - shrinkRatio)),
-              Expanded(
+              Flexible(
                 child: Transform.scale(
                   scale: 1 - (0.3 * shrinkRatio),
                   alignment: Alignment.center,
-                  child: PieChartScreen(selectedType: selectedType,selectedEvent: selectedEvent,),
+                  child: PieChartScreen(
+                    selectedType: selectedType,
+                    selectedEvent: selectedEvent,
+                  ),
                 ),
               ),
             ],
           ),
         );
-      }
+      },
     );
   }
 
