@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "327758494135",
+    "project_id": "fund-collection-90623",
+    "storage_bucket": "fund-collection-90623.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327758494135:android:083eace2e0d67dbb205032",
+        "android_client_info": {
+          "package_name": "com.example.expense_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhIxQFE8rzOeE-zH5Tr2dbaJ_0dxU3odY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
