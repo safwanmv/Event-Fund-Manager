@@ -30,4 +30,26 @@ class CategoryModel {
     this.isDeleted = false,
     required this.eventId,
   }) : id = id ?? const Uuid().v4();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'isDeleted': isDeleted,
+      "type": type.name,
+      "eventId": eventId,
+    };
+  }
+
+  factory CategoryModel.fromMap(Map<String, dynamic> map) {
+    return CategoryModel(
+      id: map['id'] ?? const Uuid().v4(),
+      name: map['name']??'',
+      isDeleted: map['deleted'] ?? false,
+      type: map['type'] == 'income'
+          ? CategoryType.income
+          : CategoryType.expense,
+      eventId: map['eventId'] ?? '',
+    );
+  }
 }

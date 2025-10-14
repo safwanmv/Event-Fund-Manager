@@ -1,7 +1,7 @@
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
-import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
+import 'package:expense_tracker/models/transaction/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:flutter/material.dart';

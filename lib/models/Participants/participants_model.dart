@@ -32,4 +32,31 @@ class ParticipantsModel {
     required this.paymentCategory,
     this.isReceived = false,
   }) : id = id ?? const Uuid().v4();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'participantId': participantId,
+      'eventId': eventId,
+      'amountPaid': amountPaid,
+      'joinedAt': joinedAt.toIso8601String(),
+      'paymentCategory': paymentCategory.toMap(),
+      'isReceived': isReceived,
+      'participantName': participantName,
+    };
+  }
+
+  factory ParticipantsModel.fromMap(Map<String, dynamic> map) {
+    return ParticipantsModel(
+      id: map['id'] ?? const Uuid().v4(),
+      participantId: map['participantId']??'',
+      participantName: map['participantName']??'',
+      eventId: map['eventId']??'',
+      amountPaid: (map['amountPaid'] ?? 0).toDouble(),
+      joinedAt: DateTime.tryParse(map['joinedAt'] ?? '') ?? DateTime.now(),
+      isReceived: map['isReceived']??false,
+      paymentCategory: map['paymentCategory'] !=null?CategoryModel.fromMap(Map<String,dynamic>.from(map['paymentCategory'])
+      ):CategoryModel(name: 'unknown', type: CategoryType.income, eventId: map['eventId'])
+    );
+  }
 }

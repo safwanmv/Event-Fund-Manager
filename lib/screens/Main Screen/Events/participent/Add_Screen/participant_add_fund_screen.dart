@@ -6,7 +6,7 @@ import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/Participants/participants_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
-import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
+import 'package:expense_tracker/models/transaction/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

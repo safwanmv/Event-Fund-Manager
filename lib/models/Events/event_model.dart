@@ -65,4 +65,32 @@ class EventModel {
 
     return "${shortPrefix}_$randomPart";
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'targetedAmount': targetedAmount,
+      'date':  date.toIso8601String(),
+      'createdBy': createdBy,
+      'participants': participants,
+      'joinCode': joinCode,
+      'collectedAmount': collectedAmount,
+    };
+  }
+
+  factory EventModel.fromMap(Map<String, dynamic> map,{String? docId})  {
+    return EventModel(
+    id: map['id'] ?? docId ?? const Uuid().v4(),
+      title: map['title']??'',
+      description: map['description']??'',
+      targetedAmount: (map['targetedAmount']??0).toDouble(),
+      date: DateTime.tryParse(map['date']??'')??DateTime.now(), 
+      createdBy: map['createdBy'],
+      participants: List<String>.from(map ['participants']??[]),
+      joinCode: map['joinCode']??'',
+      collectedAmount: (map['collectedAmount'] ?? 0).toDouble(),
+    );
+  }
 }

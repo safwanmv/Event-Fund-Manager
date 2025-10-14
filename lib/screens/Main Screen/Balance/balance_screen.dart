@@ -5,7 +5,7 @@ import 'package:expense_tracker/db/Users_db/users_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/Events/event_model.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
-import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
+import 'package:expense_tracker/models/transaction/transaction_model.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/category_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/Add%20Screen/transaction_add_bottom_sheet.dart';
 import 'package:expense_tracker/screens/Main%20Screen/Balance/transaction_list.dart';

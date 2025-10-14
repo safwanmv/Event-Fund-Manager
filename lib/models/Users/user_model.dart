@@ -22,4 +22,24 @@ class UserModel {
     required this.password,
     this.isAdmin = false,
   }) : id = id ?? const Uuid().v4();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'password': password,
+      'isAdmin': isAdmin,
+    };
+  }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map["id"] ?? const Uuid().v4(),
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      password: map['password'] ?? '',
+      isAdmin: map['isAdmin']??false,
+    );
+  }
 }

@@ -2,7 +2,7 @@ import 'package:expense_tracker/constants/text_messages.dart';
 import 'package:expense_tracker/db/Particpents_db/participents_db.dart';
 import 'package:expense_tracker/db/transaction_db/transaction_db.dart';
 import 'package:expense_tracker/models/categroy/category_model.dart';
-import 'package:expense_tracker/models/transaction/transaction%20_model.dart';
+import 'package:expense_tracker/models/transaction/transaction_model.dart';
 import 'package:expense_tracker/widgets/Empty_data/text_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
